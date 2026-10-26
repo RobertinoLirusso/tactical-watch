@@ -1,0 +1,84 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Tactical Expedition Clock",
+  description = "A tactical world clock with mission timer, digital compass, emergency beacons and live atmospheric phases.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html class="h-full" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Leaflet CSS (para el mapa) -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+  crossorigin=""
+/>
+  </head>
+
+  <body class="h-full bg-black text-neutral-200 m-0 p-0 flex flex-col justify-between overflow-x-hidden overflow-y-auto select-none relative">
+    
+    <slot />
+
+    <!-- TORCH - Pantalla blanca completa -->
+<div 
+  class="fixed inset-0 z-50 bg-white hidden flex-col items-center justify-between p-6 cursor-pointer select-none text-black" 
+  id="torch-screen-overlay"
+  title="Click anywhere or press ESC to turn off flashlight"
+>
+  <div class="flex items-center justify-between w-full font-mono-numbers text-xs font-bold tracking-widest text-zinc-800 uppercase">
+    <span>FLASHLIGHT ACTIVE (MAX LUMENS)</span>
+    <span>TAP ANYWHERE OR PRESS ESC TO EXIT</span>
+  </div>
+
+  <div class="flex flex-col items-center justify-center gap-2">
+    <span class="material-symbols-outlined text-zinc-900 text-6xl">flashlight_on</span>
+    <span class="text-xs font-mono-numbers tracking-widest text-zinc-700 font-bold uppercase">
+      HIGH-INTENSITY WHITE LANTERN
+    </span>
+  </div>
+
+  <div class="text-[10px] font-mono-numbers text-zinc-600 tracking-widest uppercase">
+    EMERGENCY FIELD SIGNAL OVERLAY
+  </div>
+</div>
+
+<!-- STROBE - Luz parpadeante -->
+<div 
+  class="fixed inset-0 pointer-events-none z-50 bg-white transition-opacity hidden" 
+  id="strobe-screen-overlay" 
+  style="opacity: 0;"
+></div>
+
+    <!-- Leaflet JS -->
+<script
+  src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+  crossorigin=""
+></script>
+
+    <!-- Tu script principal -->
+    <script src="../scripts/tactical-clock.js"></script>
+  </body>
+</html>

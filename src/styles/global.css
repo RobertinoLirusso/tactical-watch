@@ -1,0 +1,423 @@
+@import "tailwindcss";
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html, body {
+  background-color: #000000 !important;
+  color: #e5e5e5;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* 90-degree sharp borders (estilo táctico) */
+*, *::before, *::after {
+  border-radius: 0px !important;
+}
+
+.font-mono-numbers {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+.glow-subtle {
+  text-shadow: 0 0 45px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   TACTICAL CAMO PATTERNS
+   ============================================================ */
+.camo-strip-pattern {
+  background-color: #12100d;
+  background-image: 
+    radial-gradient(#2d241c 32%, transparent 34%),
+    radial-gradient(#3f3224 36%, transparent 38%),
+    radial-gradient(#181c16 28%, transparent 30%),
+    radial-gradient(#4a3b2c 24%, transparent 26%),
+    radial-gradient(#1a1612 40%, transparent 42%),
+    linear-gradient(90deg, #12100d 0%, #251e17 25%, #181c16 50%, #30261c 75%, #12100d 100%);
+  background-size: 42px 28px, 54px 34px, 60px 32px, 36px 26px, 28px 22px, 100% 100%;
+  background-position: 0px 0px, 18px 14px, 36px 8px, 12px 16px, 6px 4px, 0px 0px;
+}
+
+.camo-accent-bar {
+  background-color: #161310;
+  background-image: 
+    radial-gradient(circle at 15% 50%, #2f251c 0%, #2f251c 30%, transparent 32%),
+    radial-gradient(circle at 45% 40%, #1e221b 0%, #1e221b 36%, transparent 38%),
+    radial-gradient(circle at 75% 60%, #3d3123 0%, #3d3123 28%, transparent 30%),
+    radial-gradient(circle at 92% 30%, #171512 0%, #171512 34%, transparent 36%);
+  background-size: 60px 18px;
+}
+
+/* ============================================================
+   NEUTRAL MODULES (Chrono, Compass, UTC)
+   ============================================================ */
+#chrono-module,
+#compass-module,
+#utc-module {
+  background-color: #0c0c0c !important;
+  border: 1px solid #262626 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.015) !important;
+}
+
+#chrono-module:hover,
+#compass-module:hover,
+#utc-module:hover {
+  border-color: #383838 !important;
+}
+
+/* ============================================================
+   DIGITAL CLOCK NUMBERS
+   ============================================================ */
+#hours,
+#minutes {
+  color: #f5f5f5 !important;
+  text-shadow: 0 0 45px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1) !important;
+}
+
+#seconds {
+  color: #cccccc !important;
+  text-shadow: 0 0 35px rgba(255, 255, 255, 0.15) !important;
+}
+
+#clock-ampm {
+  color: #e5e5e5 !important;
+  border-color: #333333 !important;
+  background-color: #111111 !important;
+  text-shadow: none !important;
+}
+
+/* ============================================================
+   COMPASS
+   ============================================================ */
+.compass-dial-ring {
+  transition: transform 0.15s cubic-bezier(0.1, 0.9, 0.2, 1);
+  transform-origin: center center;
+}
+
+.compass-dial-ring circle {
+  stroke: rgba(255, 255, 255, 0.16) !important;
+}
+
+.compass-tape-strip {
+  transition: transform 0.1s linear;
+}
+
+#compass-tape-container {
+  background-color: #080808 !important;
+  border-color: #242424 !important;
+}
+
+#compass-tape-container .bg-red-500,
+#compass-tape-container .bg-white {
+  background-color: #ffffff !important;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ============================================================
+   TACTICAL BROWN / COYOTE BUTTONS
+   ============================================================ */
+
+/* Medical ICE */
+#open-medical-id-btn {
+  background-color: #382416 !important;
+  border-color: #8c6239 !important;
+  color: #d4a373 !important;
+  box-shadow: 0 0 12px rgba(140, 98, 57, 0.3) !important;
+}
+#open-medical-id-btn:hover {
+  background-color: #5c3a21 !important;
+  border-color: #d4a373 !important;
+  color: #ffffff !important;
+}
+
+/* Pomodoro buttons */
+[data-pomo="1500"] {
+  background-color: #4a331e !important;
+  border: 1px solid #8c6239 !important;
+  color: #ecd5bc !important;
+}
+[data-pomo="1500"]:hover {
+  background-color: #634327 !important;
+  color: #ffffff !important;
+}
+
+[data-pomo="300"] {
+  background-color: #3b2817 !important;
+  border: 1px solid #73502d !important;
+  color: #d4a373 !important;
+}
+[data-pomo="300"]:hover {
+  background-color: #533921 !important;
+  color: #ffffff !important;
+}
+
+[data-pomo="900"] {
+  background-color: #2e1f12 !important;
+  border: 1px solid #5a3e23 !important;
+  color: #be8e61 !important;
+}
+[data-pomo="900"]:hover {
+  background-color: #452e1b !important;
+  color: #ffffff !important;
+}
+
+/* Timer controls */
+#btn-sub-min,
+#btn-add-min,
+#btn-add-5m,
+#btn-add-10m,
+[data-preset],
+#btn-clear-timer,
+#chrono-reset-btn {
+  background-color: #231911 !important;
+  border-color: #5c3a21 !important;
+  color: #d4a373 !important;
+}
+#btn-sub-min:hover,
+#btn-add-min:hover,
+#btn-add-5m:hover,
+#btn-add-10m:hover,
+[data-preset]:hover,
+#btn-clear-timer:hover,
+#chrono-reset-btn:hover {
+  background-color: #4a301b !important;
+  border-color: #8c6239 !important;
+  color: #ffffff !important;
+}
+
+/* START button */
+#timer-toggle-btn {
+  background-color: #5c3a21 !important;
+  border-color: #8c6239 !important;
+  color: #fae8d4 !important;
+  box-shadow: 0 0 10px rgba(140, 98, 57, 0.3) !important;
+}
+#timer-toggle-btn:hover {
+  background-color: #794d2c !important;
+  border-color: #d4a373 !important;
+  color: #ffffff !important;
+}
+
+/* Compass buttons */
+#compass-mode-btn,
+#compass-lock-btn,
+#btn-recalibrate-compass {
+  background-color: #281c13 !important;
+  border: 1px solid #6b4728 !important;
+  color: #d4a373 !important;
+}
+#compass-mode-btn:hover,
+#compass-lock-btn:hover,
+#btn-recalibrate-compass:hover {
+  background-color: #4a301b !important;
+  border-color: #a3704c !important;
+  color: #ffffff !important;
+}
+
+/* Emergency beacons */
+#whistle-toggle-btn {
+  background-color: #452d19 !important;
+  border-color: #8c6239 !important;
+  color: #fae3cb !important;
+  box-shadow: 0 0 8px rgba(140, 98, 57, 0.25) !important;
+}
+#whistle-toggle-btn:hover {
+  background-color: #613f23 !important;
+  border-color: #d4a373 !important;
+}
+
+#torch-field-btn {
+  background-color: #382415 !important;
+  border-color: #79512e !important;
+  color: #d4a373 !important;
+}
+#torch-field-btn:hover {
+  background-color: #52341d !important;
+  border-color: #a3704c !important;
+  color: #ffffff !important;
+}
+
+#torch-toggle {
+  background-color: #3a2214 !important;
+  border-color: #7b4c2b !important;
+  color: #d8aa78 !important;
+}
+#torch-toggle:hover {
+  background-color: #55311c !important;
+  border-color: #a3704c !important;
+  color: #ffffff !important;
+}
+
+#sos-toggle-btn {
+  background-color: #522d17 !important;
+  border-color: #8c4b24 !important;
+  color: #f7d5b8 !important;
+  box-shadow: 0 0 10px rgba(140, 75, 36, 0.3) !important;
+}
+#sos-toggle-btn:hover {
+  background-color: #6e3d20 !important;
+  border-color: #d4a373 !important;
+}
+
+/* Bottom action buttons */
+#open-map-modal-btn,
+#open-survival-modal-btn {
+  background-color: #382416 !important;
+  border-color: #8c6239 !important;
+  color: #eed6aa !important;
+  box-shadow: 0 0 14px rgba(140, 98, 57, 0.25) !important;
+}
+#open-map-modal-btn:hover,
+#open-survival-modal-btn:hover {
+  background-color: #5c3a21 !important;
+  border-color: #d4a373 !important;
+  color: #ffffff !important;
+}
+
+/* Modal buttons */
+#close-survival-modal-btn,
+#close-map-modal-btn,
+#close-medical-id-btn,
+#map-recenter-btn,
+#map-waypoint-btn,
+#map-cache-btn,
+#open-notes-btn,
+#map-city-btn,
+#map-copy-coords-btn,
+#med-reset-defaults-btn,
+#med-save-data-btn,
+#silence-alarm-btn {
+  background-color: #2b1d12 !important;
+  border-color: #6b4728 !important;
+  color: #d4a373 !important;
+}
+#close-survival-modal-btn:hover,
+#close-map-modal-btn:hover,
+#close-medical-id-btn:hover,
+#map-recenter-btn:hover,
+#map-waypoint-btn:hover,
+#map-cache-btn:hover,
+#map-copy-coords-btn:hover,
+#med-reset-defaults-btn:hover,
+#med-save-data-btn:hover,
+#silence-alarm-btn:hover {
+  background-color: #4a301b !important;
+  border-color: #a3704c !important;
+  color: #ffffff !important;
+}
+
+/* ============================================================
+   MORSE PIP + WHISTLE PULSE
+   ============================================================ */
+.morse-pip.lit {
+  background-color: #d4a373 !important;
+  color: #000000 !important;
+  border-color: #f0c99a !important;
+  box-shadow: 0 0 10px rgba(212, 163, 115, 0.9);
+}
+
+.whistle-active-pulse {
+  animation: whistlePulse 0.18s infinite alternate ease-in-out;
+}
+
+@keyframes whistlePulse {
+  0% {
+    box-shadow: 0 0 8px rgba(212, 163, 115, 0.7), inset 0 0 4px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(212, 163, 115, 1), 0 0 35px rgba(163, 112, 76, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* ============================================================
+   SCROLLBAR TÁCTICO
+   ============================================================ */
+.tactical-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.tactical-scroll::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.tactical-scroll::-webkit-scrollbar-thumb {
+  background: #262626;
+}
+.tactical-scroll::-webkit-scrollbar-thumb:hover {
+  background: #8c6239;
+}
+
+/* ============================================================
+   ATMOSPHERIC CYCLE LAYERS (se mantienen)
+   ============================================================ */
+.cycle-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+.cycle-layer.active {
+  opacity: 1;
+}
+
+/* 1. Dawn / Sunrise */
+.bg-dawn {
+  background: radial-gradient(circle at 50% 88%, rgba(245, 158, 11, 0.35) 0%, rgba(180, 83, 9, 0.2) 28%, rgba(15, 23, 42, 0.9) 70%, #030712 100%),
+              linear-gradient(180deg, #090d16 0%, #111827 45%, #2a1b1a 75%, #3d2112 100%);
+}
+
+/* 2. Morning */
+.bg-morning {
+  background: radial-gradient(circle at 65% 25%, rgba(56, 189, 248, 0.25) 0%, rgba(14, 116, 144, 0.15) 35%, transparent 70%),
+              linear-gradient(180deg, #071524 0%, #0b1e33 40%, #081622 75%, #030712 100%);
+}
+
+/* 3. Noon */
+.bg-noon {
+  background: radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.3) 0%, rgba(224, 242, 254, 0.15) 25%, transparent 65%),
+              linear-gradient(180deg, #0a1c2e 0%, #12283f 30%, #0f1d2d 65%, #050b12 100%);
+}
+
+/* 4. Afternoon */
+.bg-afternoon {
+  background: radial-gradient(circle at 35% 45%, rgba(234, 179, 8, 0.22) 0%, rgba(161, 98, 7, 0.15) 30%, transparent 70%),
+              linear-gradient(180deg, #13171e 0%, #201a15 35%, #2a1e14 70%, #0d0a08 100%);
+}
+
+/* 5. Sunset / Dusk */
+.bg-sunset {
+  background: radial-gradient(circle at 50% 85%, rgba(244, 63, 94, 0.35) 0%, rgba(168, 85, 247, 0.2) 30%, rgba(30, 27, 75, 0.7) 65%, #050510 100%),
+              linear-gradient(180deg, #0b0717 0%, #1e112a 40%, #3b1125 72%, #4c1d1a 100%);
+}
+
+/* 6. Night */
+.bg-night {
+  background: radial-gradient(circle at 75% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 30% 80%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
+              linear-gradient(180deg, #020617 0%, #040d21 50%, #020617 100%);
+}
+
+/* 7. Midnight */
+.bg-midnight {
+  background: radial-gradient(circle at 50% 30%, rgba(30, 41, 59, 0.35) 0%, transparent 70%),
+              linear-gradient(180deg, #010204 0%, #030712 50%, #010103 100%);
+}
+
+/* Ambient stars */
+.sky-stars {
+  background-image: 
+    radial-gradient(1.5px 1.5px at 15% 18%, rgba(255,255,255,0.7) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 38% 32%, rgba(255,255,255,0.6) 50%, transparent 100%),
+    radial-gradient(2px 2px at 62% 14%, rgba(255,255,255,0.8) 50%, transparent 100%),
+    radial-gradient(1px 1px at 78% 28%, rgba(255,255,255,0.5) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 89% 12%, rgba(255,255,255,0.7) 50%, transparent 100%),
+    radial-gradient(2px 2px at 22% 52%, rgba(255,255,255,0.5) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 48% 68%, rgba(255,255,255,0.55) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 72% 58%, rgba(255,255,255,0.65) 50%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 84% 75%, rgba(255,255,255,0.75) 50%, transparent 100%);
+}

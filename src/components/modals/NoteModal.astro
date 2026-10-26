@@ -1,0 +1,30 @@
+<div class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-3 sm:p-6" id="notes-modal">
+  <div class="relative w-full max-w-lg max-h-[85vh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200 font-mono-numbers">
+    <div class="h-2 camo-strip-pattern border-b border-neutral-800"></div>
+
+    <div class="px-4 py-3 border-b border-neutral-800 flex items-center justify-between bg-[#111]">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-neutral-300">edit_note</span>
+        <span class="text-xs font-bold tracking-[0.2em] uppercase">FIELD NOTES</span>
+      </div>
+      <button class="px-2 py-1 text-xs uppercase cursor-pointer" id="close-notes-btn">CLOSE</button>
+    </div>
+
+    <div class="p-4 flex-1 overflow-y-auto">
+      <textarea
+        id="notes-textarea"
+        class="w-full h-56 bg-neutral-950 border border-neutral-700 px-3 py-2 text-xs text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-400 resize-none"
+        placeholder="Field notes, observations, grid refs..."
+      ></textarea>
+      <p class="mt-2 text-[9px] text-neutral-500" id="notes-status">LOCAL STORAGE · AUTO-SAVE OFF</p>
+    </div>
+
+    <div class="px-4 py-3 border-t border-neutral-800 bg-[#111] flex justify-between gap-2 text-[10px]">
+      <button class="px-3 py-1 uppercase cursor-pointer" id="notes-clear-btn">CLEAR</button>
+      <button class="px-4 py-1.5 font-bold uppercase cursor-pointer flex items-center gap-1" id="notes-save-btn">
+        <span class="material-symbols-outlined text-[13px]">save</span>
+        SAVE
+      </button>
+    </div>
+  </div>
+</div>

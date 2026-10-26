@@ -1,0 +1,509 @@
+---
+// SurvivalModal.astro - Versión completa con doctrina + First Aid mejorado
+---
+
+<div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" id="survival-modal">
+  <div class="relative w-full max-w-4xl max-h-[90vh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200">
+    
+    <!-- Camo header band -->
+    <div class="h-2 camo-strip-pattern border-b border-neutral-800"></div>
+
+    <!-- Modal Header -->
+    <div class="px-5 py-3 border-b border-neutral-800 flex items-center justify-between bg-[#111111]">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 bg-neutral-300 animate-pulse"></span>
+        <span class="material-symbols-outlined text-neutral-300 text-lg">medical_services</span>
+        <div>
+          <h3 class="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase font-mono-numbers text-white flex items-center gap-2">
+            TACTICAL EXPEDITION PROTOCOLS & FIRST AID
+          </h3>
+          <p class="text-[9px] font-mono-numbers text-neutral-400 tracking-wider">
+            FIELD MANUAL FM 21-76 · TCCC & WILDERNESS MEDICINE GUIDELINES
+          </p>
+        </div>
+      </div>
+      <button class="px-2.5 py-1 font-mono-numbers text-xs uppercase transition-colors flex items-center gap-1 cursor-pointer" id="close-survival-modal-btn">
+        <span class="material-symbols-outlined text-[14px]">close</span>
+        <span>CLOSE</span>
+      </button>
+    </div>
+
+    <!-- Tactical Navigation Tabs -->
+    <div class="flex items-center bg-[#0e0e0e] border-b border-neutral-800 px-5 pt-2 gap-2 text-xs font-mono-numbers">
+      
+      <button 
+        class="px-4 py-2 text-[10px] tracking-widest uppercase font-semibold border-b-2 border-white text-white bg-white/5 cursor-pointer flex items-center gap-1.5 transition-all" 
+        id="tab-btn-survival"
+      >
+        <span class="material-symbols-outlined text-[13px]">menu_book</span>
+        <span>FM 21-76 SURVIVAL MANUAL</span>
+      </button>
+
+      <button 
+        class="px-4 py-2 text-[10px] tracking-widest uppercase font-semibold border-b-2 border-transparent text-neutral-400 hover:text-neutral-200 cursor-pointer flex items-center gap-1.5 transition-all" 
+        id="tab-btn-medical"
+      >
+        <span class="material-symbols-outlined text-[13px] text-amber-400">emergency</span>
+        <span>TACTICAL FIRST AID / TCCC</span>
+        <span class="px-1.5 py-0.2 text-[8px] bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold ml-1">TRAUMA</span>
+      </button>
+
+    </div>
+
+    <!-- Scrollable Body -->
+    <div class="p-4 sm:p-6 overflow-y-auto tactical-scroll space-y-4 font-mono-numbers text-xs flex-1 bg-black">
+
+      <!-- ==================== SECTION 1: SURVIVAL MANUAL ==================== -->
+      <div id="view-survival-doctrine" class="flex-1 overflow-y-auto space-y-4 text-[11px] font-mono-numbers leading-relaxed text-neutral-300">
+
+        <!-- WATER CALCULATOR -->
+        <section class="border border-neutral-700 bg-neutral-950/80 p-3 space-y-3">
+          <div class="flex items-center gap-2 text-[10px] tracking-widest uppercase text-amber-200 font-semibold">
+            <span class="material-symbols-outlined text-[14px]">water_drop</span>
+            WATER RATION CALCULATOR
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label class="flex flex-col gap-1">
+              <span class="text-[9px] text-neutral-500 uppercase tracking-wider">People</span>
+              <input id="water-people" type="number" min="1" max="20" value="1"
+                class="bg-black border border-neutral-700 px-2 py-1.5 text-white text-xs focus:outline-none focus:border-neutral-500" />
+            </label>
+
+            <label class="flex flex-col gap-1">
+              <span class="text-[9px] text-neutral-500 uppercase tracking-wider">Days</span>
+              <input id="water-days" type="number" min="1" max="30" value="3"
+                class="bg-black border border-neutral-700 px-2 py-1.5 text-white text-xs focus:outline-none focus:border-neutral-500" />
+            </label>
+
+            <label class="flex flex-col gap-1">
+              <span class="text-[9px] text-neutral-500 uppercase tracking-wider">Climate</span>
+              <select id="water-climate"
+                class="bg-black border border-neutral-700 px-2 py-1.5 text-white text-xs focus:outline-none focus:border-neutral-500">
+                <option value="1.0">Temperate / Cool</option>
+                <option value="1.25" selected>Warm</option>
+                <option value="1.5">Hot / Arid</option>
+                <option value="1.75">Extreme heat</option>
+              </select>
+            </label>
+
+            <label class="flex flex-col gap-1">
+              <span class="text-[9px] text-neutral-500 uppercase tracking-wider">Activity</span>
+              <select id="water-activity"
+                class="bg-black border border-neutral-700 px-2 py-1.5 text-white text-xs focus:outline-none focus:border-neutral-500">
+                <option value="1.0">Rest / Shelter</option>
+                <option value="1.25" selected>Light movement</option>
+                <option value="1.5">Hiking / Work</option>
+                <option value="2.0">Heavy / Forced march</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input id="water-cooking" type="checkbox" class="accent-amber-600" checked />
+            <span class="text-[10px] text-neutral-400">Include cooking / hygiene buffer (+0.5 L / person / day)</span>
+          </label>
+
+          <div class="grid grid-cols-3 gap-2 pt-1 border-t border-neutral-800">
+            <div class="bg-black/60 border border-neutral-800 p-2">
+              <div class="text-[8px] text-neutral-500 uppercase tracking-wider">Per person / day</div>
+              <div class="text-sm text-white font-semibold" id="water-per-person">-- L</div>
+            </div>
+            <div class="bg-black/60 border border-neutral-800 p-2">
+              <div class="text-[8px] text-neutral-500 uppercase tracking-wider">Group / day</div>
+              <div class="text-sm text-white font-semibold" id="water-group-day">-- L</div>
+            </div>
+            <div class="bg-black/60 border border-neutral-800 p-2">
+              <div class="text-[8px] text-neutral-500 uppercase tracking-wider">Total mission</div>
+              <div class="text-sm text-amber-200 font-semibold" id="water-total">-- L</div>
+            </div>
+          </div>
+
+          <p class="text-[9px] text-neutral-500 leading-snug">
+            Baseline 3.0 L drinking water / person / day (field planning). Multipliers adjust for heat and workload. Not medical advice — increase intake with signs of heat stress.
+          </p>
+        </section>
+
+        <!-- PRIORITIES -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">priority_high</span>
+            FIELD PRIORITIES (RULE OF 3)
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li><span class="text-neutral-200">3 minutes</span> — air / severe bleeding control</li>
+            <li><span class="text-neutral-200">3 hours</span> — shelter / core temperature in harsh climate</li>
+            <li><span class="text-neutral-200">3 days</span> — water</li>
+            <li><span class="text-neutral-200">3 weeks</span> — food (lower priority than water/shelter)</li>
+          </ul>
+        </section>
+
+        <!-- SHELTER -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">cabin</span>
+            SHELTER &amp; EXPOSURE
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Site: dry ground, wind break, away from flash-flood channels and dead standing trees.</li>
+            <li>Insulation below the body matters as much as cover above (ground cold kills heat fast).</li>
+            <li>Cold: layer clothing, cover head/hands, keep dry, heat with body + insulation not open flame in closed tents.</li>
+            <li>Heat: shade first, reduce midday movement, loosen clothing, wet cloth on neck/wrists if water allows.</li>
+            <li>Signalable position: visible from air if rescue is expected; otherwise conceal near water/route.</li>
+          </ul>
+        </section>
+
+        <!-- WATER -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">opacity</span>
+            WATER PROCUREMENT
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Prefer clear flowing sources over stagnant. Still: treat before drinking.</li>
+            <li>Boil 1 full minute (3 min above ~2000 m) or use certified filter + chemical backup.</li>
+            <li>Collect dew with cloth at dawn; solar still only as low-yield emergency method.</li>
+            <li>Avoid urine/salt water as drinking plan — accelerates dehydration.</li>
+            <li>Ration sweat, not only water: move slow, rest in shade, breathe through nose.</li>
+          </ul>
+        </section>
+
+        <!-- FIRE -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+            FIRECRAFT
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Tinder → kindling → fuel. Prepare full stack before first spark.</li>
+            <li>Carry 2+ ignition methods (ferro rod + waterproof matches/lighter).</li>
+            <li>Fire uses: water boil, warmth, signal, morale. Never leave unattended.</li>
+            <li>Wet climate: split dead wood for dry core; birch bark / resinous wood as starter.</li>
+          </ul>
+        </section>
+
+        <!-- NAV -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">explore</span>
+            NAVIGATION TACTICS
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Stop-move: fix baseline on map/compass before terrain closes visibility.</li>
+            <li>Handrail: follow linear features (ridge, river, road) to known points.</li>
+            <li>Aiming off: deliberately offset bearing so you know which way to turn at a linear target.</li>
+            <li>Pace count + time checks; mark waypoints on the tactical map when possible.</li>
+            <li>If lost: STOP — Stay, Think, Observe, Plan. Don’t walk random loops.</li>
+          </ul>
+        </section>
+
+        <!-- SIGNAL -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">cell_tower</span>
+            SIGNALING &amp; RESCUE
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Priority signals: mirror/flash, bright ground panels, whistle blasts (three = distress).</li>
+            <li>Ground-to-air: large contrasting shapes; stay near signal site once contact likely.</li>
+            <li>Phone/radio: short scheduled calls to save battery; move to high/clear ground.</li>
+            <li>Use STROBE / torch only when aircraft or rescuers can see you — saves battery/attention.</li>
+          </ul>
+        </section>
+
+        <!-- FOOD -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">restaurant</span>
+            FOOD (SECONDARY)
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Do not burn calories on low-return foraging if rescue &lt; 72 h and water is secure.</li>
+            <li>Never eat unknown plants/mushrooms. When in doubt, skip.</li>
+            <li>Cook fish/meat thoroughly if hygiene is uncertain.</li>
+            <li>Conserve energy: shade rest, minimal unnecessary movement.</li>
+          </ul>
+        </section>
+
+        <!-- MEDICAL FIELD -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">medical_services</span>
+            FIELD MEDICAL PRIORITIES
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Massive bleeding → direct pressure, packing, tourniquet high-and-tight if needed.</li>
+            <li>Airway / breathing → position, clear mouth, recovery position if unconscious and breathing.</li>
+            <li>Prevent hypothermia even in mild weather after trauma (insulate from ground).</li>
+            <li>Clean wounds with safest water available; cover; watch for infection signs.</li>
+            <li>See FIRST AID tab for structured steps. This is not a substitute for training.</li>
+          </ul>
+        </section>
+
+        <!-- PSYCH -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">psychology</span>
+            MINDSET &amp; TEAM
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-neutral-400">
+            <li>Small routines reduce panic: water schedule, signal windows, night shelter checks.</li>
+            <li>Assign roles if in a group (fire, water, signal, medical).</li>
+            <li>Honest status reports beat optimism bias — log decisions in FIELD NOTES.</li>
+          </ul>
+        </section>
+
+        <p class="text-[9px] text-neutral-600 border-t border-neutral-800 pt-2">
+          Reference framing: fieldcraft / MIL-STD style doctrine summaries for educational UI use. Adapt to local laws, environment, and formal training.
+        </p>
+      </div>
+
+      <!-- ==================== SECTION 2: TACTICAL FIRST AID / TCCC (MEJORADO) ==================== -->
+      <div class="space-y-4 hidden" id="view-first-aid">
+
+        <!-- MARCH Header -->
+        <div class="p-3 bg-[#111111] border border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400 text-2xl">vital_signs</span>
+            <div>
+              <div class="text-white font-bold tracking-wider text-[11px] uppercase">
+                MARCH-PAWS — TACTICAL CASUALTY CARE SEQUENCE
+              </div>
+              <div class="text-[9px] text-neutral-400">
+                Care Under Fire → Tactical Field Care → Tactical Evacuation Care (TCCC guidelines)
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 flex-wrap text-[8px]">
+            <span class="px-1.5 py-0.5 bg-red-950/60 border border-red-800/60 text-red-300 font-bold">M</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">A</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">R</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">C</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">H</span>
+            <span class="text-neutral-600">·</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">P</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">A</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">W</span>
+            <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold">S</span>
+          </div>
+        </div>
+
+        <!-- CARE UNDER FIRE WARNING -->
+        <div class="border border-amber-800/50 bg-amber-950/20 p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-amber-200 font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">warning</span>
+            CARE UNDER FIRE (HOT ZONE)
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-[10px] text-neutral-400">
+            <li>Return fire / seek cover first. Only life-threatening hemorrhage is treated under fire.</li>
+            <li>Apply tourniquet high and tight over clothing if necessary. Do not expose the casualty yet.</li>
+            <li>Move the casualty to cover as soon as the threat allows. Then transition to Tactical Field Care.</li>
+          </ul>
+        </div>
+
+        <!-- M - MASSIVE BLEEDING -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px] text-red-400">bloodtype</span>
+            M — MASSIVE BLEEDING
+          </h4>
+          <ul class="list-disc pl-4 space-y-1.5 text-[10px] text-neutral-400">
+            <li><span class="text-neutral-200 font-semibold">Extremity bleed:</span> Tourniquet 5–8 cm above the wound (high & tight if site unknown). Tighten until bleeding stops and distal pulse is absent. Write time on TQ or forehead (e.g. “TQ 1430”).</li>
+            <li><span class="text-neutral-200 font-semibold">Junctional bleed</span> (groin, axilla, neck): Pack wound tightly with hemostatic gauze (or plain gauze). Apply direct pressure 3+ minutes. Consider junctional TQ if available.</li>
+            <li><span class="text-neutral-200 font-semibold">Reassess:</span> After every move. Convert to pressure dressing only when tactical situation and time allow, and bleeding is controlled.</li>
+            <li>Never remove a tourniquet in the field once applied unless trained and prepared for rapid re-bleed control.</li>
+          </ul>
+        </section>
+
+        <!-- A - AIRWAY -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">airwave</span>
+            A — AIRWAY
+          </h4>
+          <ul class="list-disc pl-4 space-y-1.5 text-[10px] text-neutral-400">
+            <li>Conscious casualty: allow preferred position (usually sitting or recovery).</li>
+            <li>Unconscious + breathing: recovery position (on side). Clear mouth of debris/vomit with finger sweep if visible.</li>
+            <li>Suspected cervical injury: jaw-thrust without tilting the head. Maintain manual stabilization if possible.</li>
+            <li>If airway cannot be maintained and evacuation is delayed: consider nasopharyngeal airway (NPA) if trained and no basilar skull fracture signs.</li>
+            <li>Monitor continuously — airway status can change rapidly.</li>
+          </ul>
+        </section>
+
+        <!-- R - RESPIRATION -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">pulmonology</span>
+            R — RESPIRATION / CHEST
+          </h4>
+          <ul class="list-disc pl-4 space-y-1.5 text-[10px] text-neutral-400">
+            <li><span class="text-neutral-200 font-semibold">Open / sucking chest wound:</span> Apply vented chest seal (or improvised occlusive dressing taped on 3 sides). Prefer commercial vented seal.</li>
+            <li>Watch for tension pneumothorax signs: progressive respiratory distress, tracheal deviation, distended neck veins, absent breath sounds on one side.</li>
+            <li>If trained and equipment available: needle decompression (2nd intercostal space mid-clavicular or 5th mid-axillary) only by qualified personnel.</li>
+            <li>Position casualty for comfort of breathing (usually sitting upright if conscious and no spinal concern).</li>
+          </ul>
+        </section>
+
+        <!-- C - CIRCULATION -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">favorite</span>
+            C — CIRCULATION / SHOCK
+          </h4>
+          <ul class="list-disc pl-4 space-y-1.5 text-[10px] text-neutral-400">
+            <li>Reassess all tourniquets and dressings after any movement.</li>
+            <li>Look for additional bleeding sites previously missed.</li>
+            <li>Signs of shock: pale/cool/clammy skin, rapid weak pulse, altered mental status, thirst.</li>
+            <li>Keep casualty warm and flat (legs elevated only if no pelvic/leg fracture and breathing allows).</li>
+            <li>If IV/IO access and fluids available and trained: follow current TCCC fluid resuscitation guidelines (hypotensive resuscitation for uncontrolled hemorrhage).</li>
+          </ul>
+        </section>
+
+        <!-- H - HYPOTHERMIA / HEAD -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">thermostat</span>
+            H — HYPOTHERMIA / HEAD INJURY
+          </h4>
+          <ul class="list-disc pl-4 space-y-1.5 text-[10px] text-neutral-400">
+            <li>Prevent hypothermia aggressively — even in mild weather after trauma. Insulate from ground, cover head, use dry layers / space blanket / hypothermia wrap.</li>
+            <li>Wet clothing = rapid heat loss. Remove wet layers if dry replacements exist and environment allows.</li>
+            <li>Head injury: monitor level of consciousness (AVPU or GCS if trained). Note pupil size/reactivity if possible.</li>
+            <li>Do not give anything by mouth if decreased consciousness or suspected internal injury.</li>
+          </ul>
+        </section>
+
+        <!-- PAWS block -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+          <!-- P - PAIN -->
+          <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+            <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px]">healing</span>
+              P — PAIN
+            </h4>
+            <ul class="list-disc pl-4 space-y-1 text-[10px] text-neutral-400">
+              <li>Control pain early when tactical situation allows.</li>
+              <li>OTC: ibuprofen / acetaminophen if conscious and no contraindications.</li>
+              <li>Stronger options only if trained and protocol allows (e.g. OTFC, ketamine in military protocols).</li>
+              <li>Document dose and time.</li>
+            </ul>
+          </section>
+
+          <!-- A - ANTIBIOTICS -->
+          <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+            <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px]">medication</span>
+              A — ANTIBIOTICS
+            </h4>
+            <ul class="list-disc pl-4 space-y-1 text-[10px] text-neutral-400">
+              <li>Open wounds / penetrating trauma: early antibiotics reduce infection risk when evacuation is delayed.</li>
+              <li>Common field options (if available & trained): moxifloxacin, ertapenem, or protocol-specific agents.</li>
+              <li>Clean wound as best as possible with potable water; leave packing if hemostatic.</li>
+            </ul>
+          </section>
+
+          <!-- W - WOUNDS -->
+          <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+            <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px]">wound</span>
+              W — WOUNDS
+            </h4>
+            <ul class="list-disc pl-4 space-y-1 text-[10px] text-neutral-400">
+              <li>Expose, clean with safest water available, remove gross debris.</li>
+              <li>Pack deep wounds; apply pressure dressing.</li>
+              <li>Leave embedded objects in place (stabilize around them).</li>
+              <li>Watch for infection: increasing pain, redness, pus, fever, red streaks.</li>
+            </ul>
+          </section>
+
+          <!-- S - SPLINTING -->
+          <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+            <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px]">orthopedics</span>
+              S — SPLINTING
+            </h4>
+            <ul class="list-disc pl-4 space-y-1 text-[10px] text-neutral-400">
+              <li>Immobilize fractures / dislocations in position found if possible.</li>
+              <li>Check CSM (Circulation, Sensation, Movement) before and after splinting.</li>
+              <li>Pad bony prominences. Use SAM splints, trekking poles, clothing, etc.</li>
+              <li>Pelvic binder for suspected pelvic fracture (improvised or commercial).</li>
+            </ul>
+          </section>
+        </div>
+
+        <!-- COMMON FIELD EMERGENCIES -->
+        <section class="border border-neutral-700 bg-neutral-950/60 p-3 space-y-3">
+          <h4 class="text-[10px] tracking-widest uppercase text-amber-200 font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">emergency</span>
+            COMMON FIELD EMERGENCIES
+          </h4>
+
+          <div class="space-y-3 text-[10px] text-neutral-400">
+            <div>
+              <div class="text-neutral-200 font-semibold mb-1">Hypothermia</div>
+              <ul class="list-disc pl-4 space-y-0.5">
+                <li>Mild: shivering, impaired judgment → shelter, dry layers, warm sweet drinks if conscious.</li>
+                <li>Severe: no shivering, decreased consciousness → gentle handling, full insulation, do not rub extremities, evacuate ASAP.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="text-neutral-200 font-semibold mb-1">Heat Illness</div>
+              <ul class="list-disc pl-4 space-y-0.5">
+                <li>Heat exhaustion: heavy sweating, weakness, nausea → shade, cool water, rest, oral fluids.</li>
+                <li>Heat stroke: hot dry or still sweating skin, altered mental status, collapse → emergency cooling (wet + fan), evacuate immediately. This is life-threatening.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="text-neutral-200 font-semibold mb-1">Anaphylaxis</div>
+              <ul class="list-disc pl-4 space-y-0.5">
+                <li>Signs: rapid onset hives, swelling of lips/tongue/throat, difficulty breathing, dizziness.</li>
+                <li>Epinephrine auto-injector (EpiPen) in outer thigh if available. Call for evacuation. Second dose may be needed after 5–15 min.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="text-neutral-200 font-semibold mb-1">Snake / Insect Bite</div>
+              <ul class="list-disc pl-4 space-y-0.5">
+                <li>Keep calm, immobilize limb at heart level, remove constricting items. Do not cut, suck, or apply ice/tourniquet for most snakes.</li>
+                <li>Note time and description of snake if possible. Evacuate for antivenom evaluation.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- EVACUATION & HANDOVER -->
+        <section class="border border-neutral-800 bg-[#0c0c0c] p-3 space-y-2">
+          <h4 class="text-[10px] tracking-widest uppercase text-white font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">local_shipping</span>
+            EVACUATION & HANDOVER
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-[10px] text-neutral-400">
+            <li>Document: mechanism of injury, times of interventions (especially TQ), vital signs trends, medications given, allergies if known.</li>
+            <li>MIST report (or similar): Mechanism, Injuries found, Signs/Symptoms, Treatment given.</li>
+            <li>Keep casualty as warm and comfortable as possible during movement. Protect airway during carries.</li>
+            <li>Reassess MARCH sequence after every major move or change in status.</li>
+          </ul>
+        </section>
+
+        <!-- DISCLAIMER -->
+        <p class="text-[9px] text-neutral-600 border-t border-neutral-800 pt-3 leading-relaxed">
+          Educational field reference only. Based on TCCC / CoTCCC principles and wilderness medicine guidelines. This is <strong>not</strong> a substitute for formal medical training, certification, or professional care. Local protocols, laws, and available equipment always take precedence. Seek professional medical help as soon as possible.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-5 py-3 border-t border-neutral-800 bg-[#111111] flex items-center justify-between text-[10px] font-mono-numbers text-neutral-500">
+      <span>FIELD REFERENCE: US ARMY FM 21-76 & CoTCCC TACTICAL TRAUMA PROTOCOLS</span>
+      <span class="text-neutral-400 flex items-center gap-1 font-semibold">
+        <span class="w-1.5 h-1.5 bg-neutral-400 animate-pulse"></span>
+        TACTICAL ARCHIVE ONLINE
+      </span>
+    </div>
+
+  </div>
+</div>

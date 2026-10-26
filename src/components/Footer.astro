@@ -1,0 +1,56 @@
+---
+// Footer.astro - Tactical Map & Survival buttons + Camo bar
+---
+
+<!-- Tactical Action Buttons + Camo Strip -->
+<div class="relative z-10 w-full px-4 mb-2 flex flex-col items-center justify-center gap-2.5">
+  
+  <!-- Buttons: Tactical Map + Survival Protocols + Notes -->
+  <div class="flex flex-row items-center justify-center gap-3 whitespace-nowrap flex-wrap">
+    <button 
+      class="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+      id="open-map-modal-btn"
+    >
+      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
+      <span class="material-symbols-outlined text-[13px]">map</span>
+      <span>[ ⛯ TACTICAL MAP ]</span>
+      <span class="text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">TACTICAL GRID</span>
+    </button>
+
+    <button 
+      class="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+      id="open-survival-modal-btn"
+    >
+      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
+      <span class="material-symbols-outlined text-[13px]">menu_book</span>
+      <span>SURVIVAL PROTOCOLS</span>
+      <span class="text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">MIL-STD FM 21-76</span>
+    </button>
+
+    <button 
+      class="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+      id="open-notes-btn"
+      title="Tactical field notes"
+    >
+      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
+      <span class="material-symbols-outlined text-[13px]">edit_note</span>
+      <span>FIELD NOTES</span>
+      <span class="text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">LOCAL LOG</span>
+    </button>
+  </div>
+
+  <!-- Camo Strip -->
+  <div class="w-full max-w-7xl flex items-center gap-3">
+    <div class="h-px flex-1 bg-gradient-to-r from-transparent via-neutral-800 to-neutral-700"></div>
+    
+    <div class="h-4 w-full max-w-2xl relative overflow-hidden border border-neutral-800 shadow-lg camo-strip-pattern">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
+      <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
+      <div class="absolute inset-x-0 bottom-0 h-px bg-black"></div>
+    </div>
+    
+    <div class="h-px flex-1 bg-gradient-to-l from-transparent via-neutral-800 to-neutral-700"></div>
+  </div>
+</div>
+
+<div class="relative z-10 w-full pb-2"></div>

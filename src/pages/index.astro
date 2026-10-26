@@ -1,17 +1,30 @@
 ---
-
+import Atmosphere from "../components/Atmosphere.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Telemetry from "../components/Telemetry.astro";
+import Footer from "../components/Footer.astro";
+import SurvivalModal from "../components/modals/SurvivalModal.astro";
+import MapModal from "../components/modals/MapModal.astro";
+import MedicalIdModal from "../components/modals/MedicalIdModal.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NoteModal from "../components/modals/NoteModal.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <Atmosphere />
+  <Header />
+  
+  <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-2">
+    <Hero />
+    <Telemetry />
+  </main>
+
+  <Footer />
+
+  <!-- Modales -->
+  <SurvivalModal />
+  <MapModal />
+  <MedicalIdModal />
+  <NoteModal />      
+</BaseLayout>

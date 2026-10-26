@@ -1,43 +1,28 @@
-# Astro Starter Kit: Minimal
+# Tactical Watch
 
-```sh
-npm create astro@latest -- --template minimal
-```
+A single-screen tactical world clock built with Astro and Tailwind CSS. It includes selectable world time zones, location/weather telemetry, day-phase atmospheric backgrounds, an hourly digital clock chime, and a configurable mission timer.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The clock plays two short generic beeps only when the selected city's local hour changes. Audio starts after the first user interaction, as required by browser autoplay policies; timer completion is silent.
 
-## 🚀 Project Structure
+The city selector includes 22 time zones. Current temperature, feels-like temperature, conditions, humidity, wind, and pressure come from the [Open-Meteo API](https://open-meteo.com/en/docs) and refresh when the city changes and every 15 minutes. No API key is required.
 
-Inside of your Astro project, you'll see the following folders and files:
+To add another city, add an entry to `cityTelemetry` in `src/scripts/tactical-clock.js` with its IANA timezone, label, display name, coordinates, and altitude. The selector and live-weather request are generated from that catalog.
+
+## Project structure
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+  components/   Atmosphere, header, hero clock, telemetry, and footer
+  layouts/      Shared HTML document layout
+  pages/        Astro routes
+  scripts/      Client-side clock and timer behavior
+  styles/       Tailwind entry point and global atmospheric styles
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Commands
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command | Action |
+| --- | --- |
+| `npm run dev` | Start the local development server |
+| `npm run build` | Build the production site in `dist/` |
+| `npm run preview` | Preview the production build locally |
