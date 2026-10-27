@@ -3,34 +3,35 @@
 ---
 
 <!-- Tactical Top Badge & Location -->
-<div class="text-center mb-2">
+<div class="w-full text-center mb-2">
   <!-- Emergency Medical ID Button (ICE) -->
   <div class="mb-2 flex items-center justify-center">
     <button 
-      class="inline-flex items-center gap-1.5 px-3 py-1 font-mono-numbers text-[9px] tracking-wider uppercase cursor-pointer select-none transition-all" 
+      class="max-w-full inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1.5 sm:py-1 font-mono-numbers text-[9px] tracking-wider uppercase cursor-pointer select-none transition-all" 
       id="open-medical-id-btn" 
       title="Operator Emergency & Personal Medical ID (ICE)"
     >
       <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
       <span class="material-symbols-outlined text-[13px]">medical_information</span>
-      <span>[ ✚ EMERGENCY MEDICAL & PERSONAL ID // ICE ]</span>
+      <span class="hidden sm:inline">[ ✚ EMERGENCY MEDICAL & PERSONAL ID // ICE ]</span>
+      <span class="sm:hidden">[ ✚ MEDICAL ID // ICE ]</span>
       <span class="text-[8px] px-1 py-0.2 bg-black/40 border border-amber-500/30 font-semibold text-amber-200">PERSONALES</span>
     </button>
   </div>
 
   <!-- Tactical Badge -->
-  <h1 class="inline-flex items-center gap-2 px-2.5 py-0.5 m-0 border border-neutral-800 bg-neutral-950 text-[9px] font-normal tracking-[0.3em] font-mono-numbers text-neutral-400 uppercase shadow-md">
+  <h1 class="max-w-full inline-flex items-center gap-2 px-2.5 py-0.5 m-0 border border-neutral-800 bg-neutral-950 text-[8px] sm:text-[9px] font-normal tracking-[0.2em] sm:tracking-[0.3em] font-mono-numbers text-neutral-400 uppercase shadow-md">
     <span class="w-1 h-1 bg-neutral-400" aria-hidden="true"></span>
     TACTICAL EXPEDITION CHRONOMETER
   </h1>
 
   <!-- Location -->
-  <div class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase text-neutral-200 drop-shadow mt-1" id="location-name">
+  <div class="px-2 text-base sm:text-lg md:text-2xl font-light tracking-[0.15em] sm:tracking-[0.3em] uppercase text-neutral-200 drop-shadow mt-1" id="location-name">
     London, United Kingdom · Europe
   </div>
 
   <!-- Date -->
-  <div class="text-xs md:text-sm font-light tracking-[0.25em] text-neutral-400 mt-1 uppercase" id="current-date">
+  <div class="px-2 text-[10px] sm:text-xs md:text-sm font-light tracking-[0.15em] sm:tracking-[0.25em] text-neutral-400 mt-1 uppercase" id="current-date">
     TUESDAY, OCTOBER 13, 2026
   </div>
 </div>
@@ -38,23 +39,23 @@
 <!-- Massive Digital Clock Digits -->
 <div class="my-1 md:my-3 flex items-baseline justify-center font-mono-numbers tracking-tight select-none">
   <span 
-    class="text-[13vw] leading-none font-bold text-[#f5f5f5] tracking-tighter" 
+    class="text-[17vw] sm:text-[13vw] leading-none font-bold text-[#f5f5f5] tracking-tighter" 
     id="hours" 
     style="font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;"
   >21</span>
 
-  <span class="text-[10vw] leading-none text-neutral-600 font-light px-1 md:px-2 animate-pulse">:</span>
+  <span class="text-[12vw] sm:text-[10vw] leading-none text-neutral-600 font-light px-0.5 sm:px-1 md:px-2 animate-pulse">:</span>
 
   <span 
-    class="text-[13vw] leading-none font-bold text-[#f5f5f5] tracking-tighter" 
+    class="text-[17vw] sm:text-[13vw] leading-none font-bold text-[#f5f5f5] tracking-tighter" 
     id="minutes" 
     style="font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;"
   >03</span>
 
-  <span class="text-[10vw] leading-none text-neutral-600 font-light px-1 md:px-2 animate-pulse">:</span>
+  <span class="text-[12vw] sm:text-[10vw] leading-none text-neutral-600 font-light px-0.5 sm:px-1 md:px-2 animate-pulse">:</span>
 
   <span 
-    class="text-[13vw] leading-none font-bold text-neutral-300 tracking-tighter" 
+    class="text-[17vw] sm:text-[13vw] leading-none font-bold text-neutral-300 tracking-tighter" 
     id="seconds" 
     style="font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;"
   >02</span>
@@ -62,7 +63,7 @@
   <!-- AM/PM -->
   <div class="flex flex-col justify-end pb-1.5 md:pb-3 pl-1 select-none">
     <span 
-      class="text-xs md:text-sm font-bold tracking-widest text-neutral-200 font-mono-numbers px-1.5 py-0.5 bg-neutral-950 border border-neutral-700 shadow-sm" 
+      class="text-[10px] sm:text-xs md:text-sm font-bold tracking-wider sm:tracking-widest text-neutral-200 font-mono-numbers px-1 sm:px-1.5 py-0.5 bg-neutral-950 border border-neutral-700 shadow-sm" 
       id="clock-ampm" 
       style="font-family: Orbitron, monospace;"
     >PM</span>

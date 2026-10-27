@@ -3,13 +3,13 @@
 ---
 
 <div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" id="tactical-map-modal">
-  <div class="relative w-full max-w-5xl max-h-[92vh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200">
+  <div class="relative w-full max-w-5xl max-h-[92dvh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-y-auto overflow-x-hidden tactical-scroll text-neutral-200">
     
     <!-- Camo header -->
     <div class="h-2 camo-strip-pattern border-b border-neutral-800"></div>
 
     <!-- Header -->
-    <div class="px-5 py-3 border-b border-neutral-800 flex items-center justify-between bg-[#111111]">
+    <div class="modal-header px-3 sm:px-5 py-3 border-b border-neutral-800 flex items-center justify-between gap-3 bg-[#111111]">
       <div class="flex items-center gap-2.5">
         <span class="w-2 h-2 bg-neutral-300 animate-pulse"></span>
         <span class="material-symbols-outlined text-neutral-300 text-lg">explore</span>
@@ -30,7 +30,7 @@
 
     <!-- Controls -->
     <div class="p-3 bg-black border-b border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-xs font-mono-numbers">
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <span class="text-[9px] text-neutral-400 uppercase tracking-wider">COORDINATES:</span>
         <span class="px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-200 text-[10px] font-semibold tracking-wider" id="leaflet-coords-display">
           LAT: 51.5074° N | LON: 0.1278° W
@@ -38,23 +38,23 @@
         <span class="px-2 py-0.5 bg-neutral-900 border border-neutral-800 text-neutral-400 text-[10px]" id="leaflet-zoom-display">ZOOM: 12x</span>
       </div>
       <div class="flex items-center gap-1.5 flex-wrap">
-        <button class="px-2 py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-recenter-btn">
+        <button class="px-2 py-1.5 sm:py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-recenter-btn">
           <span class="material-symbols-outlined text-[11px]">my_location</span>GPS CENTER
         </button>
         <button
-  class="px-2 py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer"
+  class="px-2 py-1.5 sm:py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer"
   id="map-city-btn"
 >
   <span class="material-symbols-outlined text-[11px]">location_city</span>
   CITY / ZONE
 </button>
-        <button class="px-2 py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-waypoint-btn">
+        <button class="px-2 py-1.5 sm:py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-waypoint-btn">
           <span class="material-symbols-outlined text-[11px]">add_location_alt</span>MARK WAYPOINT
         </button>
-        <button class="px-2 py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-cache-btn">
+        <button class="px-2 py-1.5 sm:py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-cache-btn">
           <span class="material-symbols-outlined text-[11px]">download</span>CACHE TILES
         </button>
-        <button class="px-2 py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-copy-coords-btn">
+        <button class="px-2 py-1.5 sm:py-0.5 text-[9px] uppercase font-semibold flex items-center gap-1 cursor-pointer" id="map-copy-coords-btn">
           <span class="material-symbols-outlined text-[11px]">content_copy</span>COPY COORDS
         </button>
       </div>
@@ -70,7 +70,7 @@
 </div>
 
     <!-- Map Container -->
-    <div class="relative w-full h-[520px] bg-[#0c1017]" id="leaflet-map-wrapper">
+    <div class="relative w-full shrink-0 h-[55dvh] min-h-[280px] sm:h-[520px] bg-[#0c1017]" id="leaflet-map-wrapper">
       <div class="w-full h-full" id="leaflet-offline-map"></div>
       
       <!-- Crosshair -->
@@ -84,8 +84,8 @@
     </div>
 
     <!-- Footer -->
-    <div class="px-5 py-2.5 border-t border-neutral-800 bg-[#111111] flex items-center justify-between text-[10px] font-mono-numbers text-neutral-500">
-      <div class="flex items-center gap-2">
+    <div class="px-3 sm:px-5 py-2.5 border-t border-neutral-800 bg-[#111111] flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono-numbers text-neutral-500">
+      <div class="flex flex-wrap items-center gap-2">
         <span>TILE ENGINE: CARTODB DARK MATTER / OSM</span>
         <span class="text-neutral-600">•</span>
         <span class="text-neutral-300 font-semibold" id="map-cache-status">TILES CACHED: STANDALONE READY</span>
