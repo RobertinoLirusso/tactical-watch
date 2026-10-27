@@ -1,0 +1,13 @@
+{
+  "name": "Tactical Expedition Clock",
+  "short_name": "Tactical Watch",
+  "description": "Tactical world clock with mission timer, digital compass, live weather and emergency tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
