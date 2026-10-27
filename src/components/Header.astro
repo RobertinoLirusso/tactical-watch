@@ -2,14 +2,14 @@
 // Header.astro - Tactical Telemetry Header (Stitch design)
 ---
 
-<header class="relative z-10 w-full pt-3 md:pt-4 px-4 md:px-6 flex flex-col items-center gap-2">
-  <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-2.5 px-2">
+<header class="relative z-10 w-full pt-3 md:pt-4 px-2 sm:px-4 md:px-6 flex flex-col items-center gap-2">
+  <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row lg:flex-wrap items-center justify-between gap-2 sm:gap-2.5 px-0 sm:px-2">
 
     <!-- GPS Fix & Position (click → modal) -->
     <button
       type="button"
       id="open-geo-modal-btn"
-      class="flex items-center gap-2 text-[10px] font-mono-numbers tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3.5 py-1.5 shadow-md cursor-pointer hover:border-neutral-600 transition-colors text-left"
+      class="max-w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-3.5 py-1.5 shadow-md cursor-pointer hover:border-neutral-600 transition-colors text-left"
       title="Open detailed coordinates"
     >
       <span class="flex items-center gap-1.5 text-neutral-200 font-semibold">
@@ -23,7 +23,7 @@
     </button>
 
     <!-- Weather Telemetry -->
-    <div class="flex items-center gap-2.5 text-[10px] font-mono-numbers tracking-widest text-neutral-300 bg-neutral-950/90 border border-neutral-800 px-4 py-1.5 shadow-md">
+    <div class="max-w-full flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-300 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-4 py-1.5 shadow-md">
       <div class="flex items-center gap-1.5">
         <span class="material-symbols-outlined text-neutral-400 text-[14px]" id="weather-icon">cloud</span>
         <span class="text-sm font-semibold text-white tracking-tight" id="weather-temp">13°C</span>
@@ -45,12 +45,12 @@
     </div>
 
     <!-- Timezone Selector -->
-    <div class="inline-flex items-center gap-3 px-3.5 py-1.5 bg-neutral-950/90 border border-neutral-800 shadow-md">
+    <div class="max-w-full inline-flex items-center gap-3 px-3 sm:px-3.5 py-1.5 bg-neutral-950/90 border border-neutral-800 shadow-md">
       <div class="flex items-center gap-2 pl-1">
         <span class="text-[10px] tracking-widest uppercase font-mono-numbers text-neutral-400 font-medium select-none">ZONE</span>
-        <div class="relative flex items-center border border-neutral-700 bg-black/60 px-2 py-0.5">
+        <div class="relative min-w-0 flex items-center border border-neutral-700 bg-black/60 px-2 py-0.5">
           <select
-            class="bg-transparent text-xs font-light tracking-wider text-white focus:outline-none cursor-pointer appearance-none pr-5 py-0.5"
+            class="bg-transparent text-xs font-light tracking-wider text-white focus:outline-none cursor-pointer appearance-none pr-5 py-1 sm:py-0.5 max-w-[60vw] sm:max-w-none"
             id="timezone-select"
             style="appearance: none;"
           >
@@ -74,7 +74,7 @@
     </div>
 
     <!-- Barometer & Heading -->
-    <div class="flex items-center gap-2 text-[10px] font-mono-numbers tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3.5 py-1.5 shadow-md">
+    <div class="max-w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-3.5 py-1.5 shadow-md">
       <span class="flex items-center gap-1 text-neutral-300 font-medium">
         <span class="material-symbols-outlined text-[13px]">speed</span>
         <span id="geo-baro">1014 hPa</span>

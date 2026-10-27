@@ -3,13 +3,13 @@
 ---
 
 <div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" id="medical-id-modal">
-  <div class="relative w-full max-w-4xl max-h-[92vh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200 font-mono-numbers">
+  <div class="relative w-full max-w-4xl max-h-[92dvh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200 font-mono-numbers">
     
     <!-- Camo header -->
     <div class="h-2 camo-strip-pattern border-b border-neutral-800"></div>
 
     <!-- Header -->
-    <div class="px-5 py-3.5 border-b border-neutral-800 flex items-center justify-between bg-[#111111]">
+    <div class="modal-header px-3 sm:px-5 py-3.5 border-b border-neutral-800 flex items-center justify-between gap-3 bg-[#111111]">
       <div class="flex items-center gap-2.5">
         <span class="w-2 h-2 bg-neutral-300 animate-pulse"></span>
         <span class="material-symbols-outlined text-neutral-300 text-lg">health_and_safety</span>
@@ -29,8 +29,8 @@
     </div>
 
     <!-- Status bar -->
-    <div class="px-5 py-2 bg-black border-b border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-[10px]">
-      <div class="flex items-center gap-2">
+    <div class="px-3 sm:px-5 py-2 bg-black border-b border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-[10px]">
+      <div class="flex flex-wrap items-center gap-2">
         <span class="text-neutral-400">STATUS:</span>
         <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-200 font-semibold">I.C.E. PERSONAL DIRECTIVE</span>
         <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-800 text-neutral-400">NO EXTERNAL CONTACTS</span>
@@ -148,12 +148,12 @@
     </div>
 
     <!-- Footer actions -->
-    <div class="px-5 py-3 border-t border-neutral-800 bg-[#111111] flex flex-wrap items-center justify-between gap-3 text-[10px]">
+    <div class="px-3 sm:px-5 py-3 border-t border-neutral-800 bg-[#111111] flex flex-wrap items-center justify-between gap-3 text-[10px]">
       <div class="flex items-center gap-2 text-neutral-500">
         <span class="material-symbols-outlined text-[13px] text-neutral-400">lock</span>
         <span>PERSISTENT LOCAL STORAGE · NO REMOTE TRANSMISSION</span>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 ml-auto">
         <button class="px-3 py-1 uppercase transition-colors cursor-pointer" id="med-reset-defaults-btn">RESET</button>
         <button class="px-4 py-1.5 font-bold uppercase transition-all flex items-center gap-1.5 cursor-pointer" id="med-save-data-btn">
           <span class="material-symbols-outlined text-[13px]">save</span>

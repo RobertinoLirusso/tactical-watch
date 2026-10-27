@@ -560,6 +560,63 @@ function initAudioContext() {
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
 
+// Classic digital-watch beep (square wave, hard on/off with tiny ramps to avoid clicks)
+function playBeep(freq = 2048, durationMs = 90, delayMs = 0, volume = 0.12) {
+  if (!audioCtx || audioCtx.state !== "running") return;
+  const t = audioCtx.currentTime + delayMs / 1000;
+  const end = t + durationMs / 1000;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "square";
+  osc.frequency.setValueAtTime(freq, t);
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.linearRampToValueAtTime(volume, t + 0.004);
+  gain.gain.setValueAtTime(volume, end - 0.004);
+  gain.gain.linearRampToValueAtTime(0.0001, end);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(t);
+  osc.stop(end + 0.01);
+}
+
+// Hourly chime: two short beeps ("beep-beep")
+function playHourlyChime() {
+  playBeep(2048, 90, 0);
+  playBeep(2048, 90, 180);
+}
+
+// ===================== TIMER ALARM =====================
+const ALARM_DURATION_MS = 30000;
+const silenceAlarmBtn = document.getElementById("silence-alarm-btn");
+let alarmInterval = null;
+let alarmStopTimeout = null;
+
+function playAlarmBurst() {
+  // Classic "beep-beep-beep-beep" pattern
+  for (let i = 0; i < 4; i++) playBeep(2048, 70, i * 125, 0.14);
+}
+
+function startTimerAlarm() {
+  stopTimerAlarm();
+  initAudioContext();
+  playAlarmBurst();
+  alarmInterval = setInterval(playAlarmBurst, 1000);
+  alarmStopTimeout = setTimeout(stopTimerAlarm, ALARM_DURATION_MS);
+  if (silenceAlarmBtn) silenceAlarmBtn.style.display = "";
+  missionTimerEl?.classList.add("animate-pulse");
+}
+
+function stopTimerAlarm() {
+  const wasActive = alarmInterval !== null;
+  if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+  if (alarmStopTimeout) { clearTimeout(alarmStopTimeout); alarmStopTimeout = null; }
+  if (silenceAlarmBtn) silenceAlarmBtn.style.display = "none";
+  missionTimerEl?.classList.remove("animate-pulse");
+  if (wasActive) renderTimerUI();
+}
+
+silenceAlarmBtn?.addEventListener("click", () => stopTimerAlarm());
+
 // ===================== TIMER =====================
 let timerTotalSeconds = 0;
 let timerMode = "countdown";
@@ -601,7 +658,7 @@ function renderTimerUI() {
     if (timerToggleLabel) timerToggleLabel.textContent = "RESUME";
     if (timerToggleIcon) timerToggleIcon.textContent = "play_arrow";
   } else {
-    if (timerStatusBadge) timerStatusBadge.textContent = "STANDBY";
+    if (timerStatusBadge) timerStatusBadge.textContent = alarmInterval ? "TIME UP" : "STANDBY";
     if (timerToggleLabel) timerToggleLabel.textContent = "START";
     if (timerToggleIcon) timerToggleIcon.textContent = "play_arrow";
   }
@@ -615,7 +672,10 @@ function stepTimer() {
     if (timerState === "RUNNING") {
       if (timerMode === "countdown" || timerMode === "pomo") {
         timerTotalSeconds = Math.max(0, timerTotalSeconds - elapsed);
-        if (timerTotalSeconds === 0) timerState = "STANDBY";
+        if (timerTotalSeconds === 0) {
+          timerState = "STANDBY";
+          startTimerAlarm();
+        }
       } else timerTotalSeconds += elapsed;
       renderTimerUI();
     }
@@ -624,6 +684,7 @@ function stepTimer() {
 
 timerToggleBtn?.addEventListener("click", () => {
   initAudioContext();
+  stopTimerAlarm();
   if (timerState === "RUNNING") timerState = "PAUSED";
   else {
     if (timerTotalSeconds === 0) timerMode = "countup";
@@ -635,6 +696,7 @@ timerToggleBtn?.addEventListener("click", () => {
 
 chronoResetBtn?.addEventListener("click", () => {
   initAudioContext();
+  stopTimerAlarm();
   timerTotalSeconds = 0;
   timerMode = "countdown";
   timerState = "STANDBY";
@@ -644,6 +706,7 @@ chronoResetBtn?.addEventListener("click", () => {
 
 btnClearTimer?.addEventListener("click", () => {
   initAudioContext();
+  stopTimerAlarm();
   timerTotalSeconds = 0;
   timerMode = "countdown";
   timerState = "STANDBY";
@@ -652,6 +715,7 @@ btnClearTimer?.addEventListener("click", () => {
 
 function adjustTimerSeconds(amount) {
   initAudioContext();
+  stopTimerAlarm();
   timerTotalSeconds = Math.max(0, timerTotalSeconds + amount);
   timerMode = "countdown";
   renderTimerUI();
@@ -665,6 +729,7 @@ document.getElementById("btn-add-10m")?.addEventListener("click", () => adjustTi
 document.querySelectorAll("[data-preset]").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     initAudioContext();
+    stopTimerAlarm();
     timerTotalSeconds = parseInt(e.currentTarget.getAttribute("data-preset"), 10);
     timerMode = "countdown";
     timerState = "RUNNING";
@@ -676,6 +741,7 @@ document.querySelectorAll("[data-preset]").forEach((btn) => {
 document.querySelectorAll("[data-pomo]").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     initAudioContext();
+    stopTimerAlarm();
     timerTotalSeconds = parseInt(e.currentTarget.getAttribute("data-pomo"), 10);
     timerMode = "pomo";
     currentPomoLabel = e.currentTarget.textContent.trim();
@@ -1756,6 +1822,10 @@ function initUserPositionOnLoad() {
 }
 
 // ===================== CLOCK =====================
+// Tracks the last displayed hour per timezone so switching zones doesn't trigger the chime
+let lastChimeHour = null;
+let lastChimeTimezone = null;
+
 function updateClock() {
   const now = new Date();
   const timeFormatter = new Intl.DateTimeFormat("en-GB", {
@@ -1773,6 +1843,11 @@ function updateClock() {
   }
   const hourNum = parseInt(hours, 10);
   const minNum = parseInt(minutes, 10);
+  if (lastChimeTimezone === currentTimezone && lastChimeHour !== null && lastChimeHour !== hourNum) {
+    playHourlyChime();
+  }
+  lastChimeHour = hourNum;
+  lastChimeTimezone = currentTimezone;
   if (hoursEl) hoursEl.textContent = hours.padStart(2, "0");
   if (minutesEl) minutesEl.textContent = minutes.padStart(2, "0");
   if (secondsEl) secondsEl.textContent = seconds.padStart(2, "0");

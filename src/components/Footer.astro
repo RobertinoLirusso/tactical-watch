@@ -3,39 +3,39 @@
 ---
 
 <!-- Tactical Action Buttons + Camo Strip -->
-<div class="relative z-10 w-full px-4 mb-2 flex flex-col items-center justify-center gap-2.5">
+<div class="relative z-10 w-full px-3 sm:px-4 mt-3 sm:mt-0 mb-2 flex flex-col items-center justify-center gap-2.5">
   
   <!-- Buttons: Tactical Map + Survival Protocols + Notes -->
-  <div class="flex flex-row items-center justify-center gap-3 whitespace-nowrap flex-wrap">
+  <div class="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 whitespace-nowrap sm:flex-wrap">
     <button 
-      class="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+      class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 sm:py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
       id="open-map-modal-btn"
     >
       <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
       <span class="material-symbols-outlined text-[13px]">map</span>
       <span>[ ⛯ TACTICAL MAP ]</span>
-      <span class="text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">TACTICAL GRID</span>
+      <span class="hidden min-[400px]:inline text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">TACTICAL GRID</span>
     </button>
 
     <button 
-      class="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+      class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 sm:py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
       id="open-survival-modal-btn"
     >
       <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
       <span class="material-symbols-outlined text-[13px]">menu_book</span>
       <span>SURVIVAL PROTOCOLS</span>
-      <span class="text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">MIL-STD FM 21-76</span>
+      <span class="hidden min-[400px]:inline text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">MIL-STD FM 21-76</span>
     </button>
 
     <button 
-      class="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+      class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 sm:py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
       id="open-notes-btn"
       title="Tactical field notes"
     >
       <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
       <span class="material-symbols-outlined text-[13px]">edit_note</span>
       <span>FIELD NOTES</span>
-      <span class="text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">LOCAL LOG</span>
+      <span class="hidden min-[400px]:inline text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">LOCAL LOG</span>
     </button>
   </div>
 
