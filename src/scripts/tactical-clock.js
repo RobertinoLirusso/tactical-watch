@@ -288,6 +288,13 @@ let currentTimezone = resolveTimezone(rawUserTimezone || "Europe/London");
 
 let userGeo = { lat: null, lon: null, alt: null, hasFix: false };
 
+let sunTimes = {
+  riseISO: null,
+  setISO: null,
+  riseMs: null,
+  setMs: null
+};
+
 // 'city' = clima de la ciudad seleccionada
 // 'user' = clima de GPS del usuario (modo LOCAL_AUTO con fix)
 let weatherGeoSource = "city";
@@ -302,6 +309,9 @@ const utcOffsetEl = document.getElementById("utc-offset");
 const zuluTimeEl = document.getElementById("zulu-time");
 const timezoneSelect = document.getElementById("timezone-select");
 const ampmEl = document.getElementById("clock-ampm");
+const sunRiseEl = document.getElementById("sun-rise");
+const sunSetEl = document.getElementById("sun-set");
+const sunCountdownEl = document.getElementById("sun-countdown");
 
 const weatherIconEl = document.getElementById("weather-icon");
 const weatherTempEl = document.getElementById("weather-temp");
@@ -510,6 +520,7 @@ async function updateWeatherTelemetry() {
     latitude: String(lat),
     longitude: String(lon),
     current: "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl",
+    daily: "sunrise,sunset",
     wind_speed_unit: "kmh",
     timezone: currentTimezone,
     forecast_days: "1"
@@ -521,6 +532,25 @@ async function updateWeatherTelemetry() {
     const result = await response.json();
     const current = result.current;
     if (!current || !Number.isFinite(current.temperature_2m)) throw new Error("Invalid data");
+    
+    // --- Sunrise / Sunset ---
+    const daily = result.daily;
+    if (daily?.sunrise?.[0] && daily?.sunset?.[0]) {
+      sunTimes.riseISO = daily.sunrise[0];
+      sunTimes.setISO = daily.sunset[0];
+      sunTimes.riseMs = new Date(daily.sunrise[0]).getTime();
+      sunTimes.setMs = new Date(daily.sunset[0]).getTime();
+
+      if (sunRiseEl) sunRiseEl.textContent = formatSunTime(sunTimes.riseISO, currentTimezone);
+      if (sunSetEl) sunSetEl.textContent = formatSunTime(sunTimes.setISO, currentTimezone);
+      updateSunCountdown();
+    } else {
+      sunTimes = { riseISO: null, setISO: null, riseMs: null, setMs: null };
+      if (sunRiseEl) sunRiseEl.textContent = "--:--";
+      if (sunSetEl) sunSetEl.textContent = "--:--";
+      if (sunCountdownEl) sunCountdownEl.textContent = "--";
+    }
+
 
     const weather = weatherCodeConfig[current.weather_code] ?? {
       condition: `CODE ${current.weather_code}`,
@@ -547,7 +577,63 @@ async function updateWeatherTelemetry() {
     if (weatherWindEl) weatherWindEl.textContent = "-- km/h --";
     if (geoBaroEl) geoBaroEl.textContent = "-- hPa";
     if (weatherStatusEl) weatherStatusEl.textContent = "Weather unavailable";
+    sunTimes = { riseISO: null, setISO: null, riseMs: null, setMs: null };
+    if (sunRiseEl) sunRiseEl.textContent = "--:--";
+    if (sunSetEl) sunSetEl.textContent = "--:--";
+    if (sunCountdownEl) sunCountdownEl.textContent = "--";
   }
+}
+
+function formatSunTime(isoString, timeZone) {
+  if (!isoString) return "--:--";
+  try {
+    const d = new Date(isoString);
+    return new Intl.DateTimeFormat("en-GB", {
+      timeZone: timeZone || currentTimezone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).format(d);
+  } catch {
+    return "--:--";
+  }
+}
+
+function formatDuration(ms) {
+  if (ms == null || ms < 0) return "--";
+  const totalMin = Math.floor(ms / 60000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  if (h > 0) return `${h}h ${String(m).padStart(2, "0")}m`;
+  return `${m}m`;
+}
+
+function updateSunCountdown() {
+  if (!sunCountdownEl) return;
+  const now = Date.now();
+  const { riseMs, setMs } = sunTimes;
+  if (riseMs == null || setMs == null) {
+    sunCountdownEl.textContent = "--";
+    return;
+  }
+
+  // Próximo evento: si ya pasó el set de hoy, el próximo es el rise de mañana (o el que quede)
+  let nextLabel = "";
+  let nextMs = null;
+
+  if (now < riseMs) {
+    nextMs = riseMs - now;
+    nextLabel = "→ SR ";
+  } else if (now < setMs) {
+    nextMs = setMs - now;
+    nextLabel = "→ SS ";
+  } else {
+    // Después del sunset: mostrar hasta el próximo sunrise (~ +24h del rise de hoy)
+    nextMs = riseMs + 24 * 60 * 60 * 1000 - now;
+    nextLabel = "→ SR ";
+  }
+
+  sunCountdownEl.textContent = nextLabel + formatDuration(nextMs);
 }
 
 // ===================== AUDIO =====================
@@ -1873,6 +1959,8 @@ function updateClock() {
     if (utcOffsetEl) utcOffsetEl.textContent = "UTC+0";
   }
   stepTimer();
+  updateSunCountdown();
+
 }
 
 // ===================== INIT =====================

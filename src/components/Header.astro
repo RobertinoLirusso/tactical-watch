@@ -89,12 +89,31 @@
     </div>
   </div>
 
-  <!-- Day Phase + Moon -->
+ <!-- Day Phase + Sun times -->
   <div class="pt-0.5 flex items-center justify-center gap-2 flex-wrap">
     <div class="inline-flex items-center gap-2 px-3 py-0.5 bg-neutral-950/90 border border-neutral-800 text-[11px] font-mono-numbers tracking-widest shadow-md">
       <span class="w-1.5 h-1.5 bg-neutral-400 animate-pulse" id="phase-pulse-dot"></span>
       <span class="material-symbols-outlined text-[13px] text-neutral-300" id="phase-icon">dark_mode</span>
       <span class="font-medium text-neutral-300 tracking-wider text-[10px] uppercase" id="phase-name">NIGHT</span>
+    </div>
+
+    <div class="inline-flex items-center gap-2 px-3 py-0.5 bg-neutral-950/90 border border-neutral-800 text-[10px] font-mono-numbers tracking-widest shadow-md text-neutral-400">
+      <span class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-[13px] text-amber-500/90">wb_twilight</span>
+        <span class="text-neutral-500 uppercase">SR</span>
+        <span class="text-neutral-200 font-semibold" id="sun-rise">--:--</span>
+      </span>
+      <span class="text-neutral-700">|</span>
+      <span class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-[13px] text-rose-400/90">wb_twilight</span>
+        <span class="text-neutral-500 uppercase">SS</span>
+        <span class="text-neutral-200 font-semibold" id="sun-set">--:--</span>
+      </span>
+      <span class="text-neutral-700">|</span>
+      <span class="flex items-center gap-1 text-neutral-400" id="sun-countdown-wrap" title="Time to next sunrise or sunset">
+        <span class="material-symbols-outlined text-[12px]">schedule</span>
+        <span id="sun-countdown">--</span>
+      </span>
     </div>
   </div>
 </header>
