@@ -342,14 +342,11 @@ function applyUserGeoToHeader() {
     geoCoordsEl.textContent = formatUserCoords(userGeo.lat, userGeo.lon);
   }
 
-  const city = cityTelemetry[currentTimezone];
   if (geoAltEl) {
     if (userGeo.alt != null && Number.isFinite(userGeo.alt)) {
-      geoAltEl.textContent = `${Math.round(userGeo.alt)}m MSL`;
-    } else if (city?.alt) {
-      geoAltEl.textContent = city.alt;
+      geoAltEl.textContent = `${Math.round(userGeo.alt)} m`;
     } else {
-      geoAltEl.textContent = "-- m MSL";
+      geoAltEl.textContent = "-- m";
     }
   }
 
@@ -1348,10 +1345,154 @@ document.getElementById("close-survival-modal-btn")?.addEventListener("click", (
   const cacheBtn = document.getElementById("map-cache-btn");
   const copyCoordsBtn = document.getElementById("map-copy-coords-btn");
   const CACHE_NAME = "tactical-osm-tiles-v1";
+  const TRACK_STORAGE_KEY = "tactical_mission_track_v1";
+  const TRACK_RETENTION_MS = 24 * 60 * 60 * 1000;
+  const trackIntervalSelect = document.getElementById("map-track-interval");
+  const trackStartBtn = document.getElementById("map-track-start-btn");
+  const trackStopBtn = document.getElementById("map-track-stop-btn");
+  const trackClearBtn = document.getElementById("map-track-clear-btn");
+  const trackStatus = document.getElementById("map-track-status");
+  const trackCount = document.getElementById("map-track-count");
   let map = null;
   let currentMarker = null;
+  let trackLayer = null;
+  let trackPoints = [];
+  let trackTimer = null;
+  let isTracking = false;
+  let isTrackSamplePending = false;
   let waypoints = [];
   let lastCoords = { lat: -34.6037, lon: -58.3816 };
+
+  function setTrackStatus(message) {
+    if (trackStatus) trackStatus.textContent = message;
+  }
+  function saveTrack() {
+    try {
+      localStorage.setItem(TRACK_STORAGE_KEY, JSON.stringify(trackPoints));
+      return true;
+    } catch (error) {
+      setTrackStatus("TRACK STORAGE FAILED · CHECK DEVICE STORAGE");
+      return false;
+    }
+  }
+  function pruneTrack() {
+    const cutoff = Date.now() - TRACK_RETENTION_MS;
+    const retained = trackPoints.filter((point) =>
+      Number.isFinite(point.timestamp) &&
+      point.timestamp >= cutoff &&
+      Number.isFinite(point.lat) &&
+      Number.isFinite(point.lon) &&
+      point.lat >= -90 && point.lat <= 90 &&
+      point.lon >= -180 && point.lon <= 180
+    );
+    const changed = retained.length !== trackPoints.length;
+    trackPoints = retained;
+    if (changed) saveTrack();
+  }
+  function loadTrack() {
+    try {
+      const saved = localStorage.getItem(TRACK_STORAGE_KEY);
+      if (!saved) {
+        trackPoints = [];
+        return;
+      }
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) throw new Error("Invalid mission track");
+      trackPoints = parsed;
+      pruneTrack();
+    } catch (error) {
+      trackPoints = [];
+      setTrackStatus("TRACK DATA COULD NOT BE READ · START A NEW LOG");
+    }
+  }
+  function renderTrack() {
+    if (!map || typeof L === "undefined") return;
+    if (!trackLayer) trackLayer = L.layerGroup().addTo(map);
+    trackLayer.clearLayers();
+    if (trackPoints.length > 1) {
+      L.polyline(trackPoints.map((point) => [point.lat, point.lon]), {
+        color: "#d4a373",
+        weight: 3,
+        opacity: 0.9
+      }).addTo(trackLayer);
+    }
+    if (trackPoints.length > 0) {
+      const first = trackPoints[0];
+      const last = trackPoints[trackPoints.length - 1];
+      L.circleMarker([first.lat, first.lon], {
+        radius: 4, color: "#f5f5f5", fillColor: "#d4a373", fillOpacity: 1, weight: 1
+      }).bindTooltip("TRACK START").addTo(trackLayer);
+      if (trackPoints.length > 1) {
+        L.circleMarker([last.lat, last.lon], {
+          radius: 5, color: "#ffffff", fillColor: "#d4a373", fillOpacity: 1, weight: 2
+        }).bindTooltip("LATEST GPS FIX").addTo(trackLayer);
+      }
+    }
+  }
+  function updateTrackDisplay() {
+    pruneTrack();
+    if (trackCount) trackCount.textContent = `${trackPoints.length} ${trackPoints.length === 1 ? "POINT" : "POINTS"}`;
+    renderTrack();
+  }
+  function trackIntervalMs() {
+    const minutes = Number(trackIntervalSelect?.value) || 5;
+    return minutes * 60 * 1000;
+  }
+  function requestTrackSample() {
+    if (!isTracking || isTrackSamplePending) return;
+    if (!navigator.geolocation) {
+      stopTracking("GPS NOT SUPPORTED BY THIS BROWSER");
+      return;
+    }
+    isTrackSamplePending = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        isTrackSamplePending = false;
+        if (!isTracking) return;
+        const { latitude, longitude, altitude, accuracy } = pos.coords;
+        trackPoints.push({
+          timestamp: Number.isFinite(pos.timestamp) ? pos.timestamp : Date.now(),
+          lat: latitude,
+          lon: longitude,
+          alt: Number.isFinite(altitude) ? altitude : null,
+          accuracy: Number.isFinite(accuracy) ? accuracy : null
+        });
+        updateTrackDisplay();
+        if (saveTrack()) {
+          setTrackStatus(`TRACKING · EVERY ${Number(trackIntervalSelect?.value) || 5} MIN · LAST FIX ${new Date().toLocaleTimeString()}`);
+        }
+      },
+      (error) => {
+        isTrackSamplePending = false;
+        const messages = {
+          1: "GPS PERMISSION DENIED",
+          2: "GPS POSITION UNAVAILABLE",
+          3: "GPS REQUEST TIMED OUT"
+        };
+        setTrackStatus(messages[error.code] || "GPS POSITION FAILED");
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+    );
+  }
+  function stopTracking(statusMessage) {
+    isTracking = false;
+    if (trackTimer !== null) {
+      clearInterval(trackTimer);
+      trackTimer = null;
+    }
+    if (trackStartBtn) trackStartBtn.disabled = false;
+    if (trackStopBtn) trackStopBtn.disabled = true;
+    setTrackStatus(statusMessage || `TRACK OFF · ${trackPoints.length} POINTS SAVED ON THIS DEVICE`);
+  }
+  function startTracking() {
+    if (isTracking) return;
+    isTracking = true;
+    if (trackStartBtn) trackStartBtn.disabled = true;
+    if (trackStopBtn) trackStopBtn.disabled = false;
+    setTrackStatus("STARTING GPS TRACK · WAITING FOR POSITION");
+    requestTrackSample();
+    trackTimer = setInterval(requestTrackSample, trackIntervalMs());
+  }
 
   function formatCoords(lat, lon) {
     const latDir = lat >= 0 ? "N" : "S";
@@ -1463,10 +1604,13 @@ document.getElementById("close-survival-modal-btn")?.addEventListener("click", (
   }
   function initMap() {
     if (map || typeof L === "undefined") return;
+    loadTrack();
     const city = getSelectedCityCoords();
     map = L.map("leaflet-offline-map", { zoomControl: false, attributionControl: false }).setView([city.lat, city.lon], 12);
     L.control.zoom({ position: "bottomright" }).addTo(map);
     createTileLayer().addTo(map);
+    trackLayer = L.layerGroup().addTo(map);
+    updateTrackDisplay();
     currentMarker = L.marker([city.lat, city.lon]).addTo(map);
     map.on("moveend zoomend", () => {
       const center = map.getCenter();
@@ -1508,6 +1652,23 @@ document.getElementById("close-survival-modal-btn")?.addEventListener("click", (
   });
 
   cityBtn?.addEventListener("click", () => { if (map) centerOnSelectedCity(); });
+
+  trackStartBtn?.addEventListener("click", startTracking);
+  trackStopBtn?.addEventListener("click", () => stopTracking());
+  trackIntervalSelect?.addEventListener("change", () => {
+    if (!isTracking) return;
+    clearInterval(trackTimer);
+    trackTimer = setInterval(requestTrackSample, trackIntervalMs());
+    setTrackStatus(`TRACKING · EVERY ${Number(trackIntervalSelect.value) || 5} MIN`);
+  });
+  trackClearBtn?.addEventListener("click", () => {
+    if (!window.confirm("Clear all saved GPS points from this device?")) return;
+    trackPoints = [];
+    if (saveTrack()) {
+      updateTrackDisplay();
+      setTrackStatus(isTracking ? "TRACKING · SAVED TRACK CLEARED" : "TRACK OFF · TRACK CLEARED");
+    }
+  });
 
   waypointBtn?.addEventListener("click", () => {
     if (!map) return;
@@ -1760,13 +1921,68 @@ window.TacticalNav = {
   const sourceCityBtn = document.getElementById("geo-source-city-btn");
   const copyBtn = document.getElementById("geo-copy-btn");
   const copyFeedback = document.getElementById("geo-copy-feedback");
+  const refreshGpsBtn = document.getElementById("geo-refresh-gps-btn");
   const elSource = document.getElementById("geo-modal-source");
   const elLat = document.getElementById("geo-modal-lat");
   const elLon = document.getElementById("geo-modal-lon");
   const elAlt = document.getElementById("geo-modal-alt");
+  const elPressure = document.getElementById("geo-modal-pressure");
+  const elPressureLabel = document.getElementById("geo-modal-pressure-title");
+  const elTemperature = document.getElementById("geo-modal-temperature");
+  const elWeatherStatus = document.getElementById("geo-modal-weather-status");
   const elDecimal = document.getElementById("geo-modal-decimal");
   const elPlace = document.getElementById("geo-modal-place");
   let geoModalSource = "user";
+  let geoWeatherRequest = null;
+
+  function clearGeoWeather(message) {
+    geoWeatherRequest?.abort();
+    geoWeatherRequest = null;
+    if (elPressure) elPressure.textContent = "-- hPa";
+    if (elPressureLabel) elPressureLabel.textContent = "Atmospheric pressure";
+    if (elTemperature) elTemperature.textContent = "--°C";
+    if (elWeatherStatus) elWeatherStatus.textContent = message;
+  }
+  async function loadGeoWeather(lat, lon) {
+    geoWeatherRequest?.abort();
+    geoWeatherRequest = new AbortController();
+    const { signal } = geoWeatherRequest;
+    if (elWeatherStatus) elWeatherStatus.textContent = "FETCHING WEATHER FOR POSITION...";
+    if (elPressure) elPressure.textContent = "-- hPa";
+    if (elTemperature) elTemperature.textContent = "--°C";
+    const query = new URLSearchParams({
+      latitude: String(lat),
+      longitude: String(lon),
+      current: "temperature_2m,surface_pressure,pressure_msl",
+      timezone: "auto"
+    });
+    try {
+      const response = await fetch(`https://api.open-meteo.com/v1/forecast?${query}`, { signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const result = await response.json();
+      const current = result.current;
+      if (!current) throw new Error("Weather data unavailable");
+      const surfacePressure = Number.isFinite(current.surface_pressure);
+      const pressure = surfacePressure ? current.surface_pressure : current.pressure_msl;
+      if (elPressure) elPressure.textContent = Number.isFinite(pressure) ? `${Math.round(pressure)} hPa` : "-- hPa";
+      if (elPressureLabel) {
+        elPressureLabel.textContent = surfacePressure
+          ? "Atmospheric pressure · surface"
+          : "Atmospheric pressure · sea-level reference";
+      }
+      if (elTemperature) {
+        elTemperature.textContent = Number.isFinite(current.temperature_2m)
+          ? `${current.temperature_2m.toFixed(1)}°C`
+          : "--°C";
+      }
+      if (elWeatherStatus) {
+        elWeatherStatus.textContent = "POSITION-BASED WEATHER ESTIMATE · NOT A DEVICE SENSOR";
+      }
+    } catch (error) {
+      if (signal.aborted) return;
+      clearGeoWeather("WEATHER DATA UNAVAILABLE · CHECK CONNECTION");
+    }
+  }
 
   function fmt(lat, lon) {
     return {
@@ -1776,11 +1992,12 @@ window.TacticalNav = {
     };
   }
   function getActiveGeo() {
-    if (geoModalSource === "user" && userGeo.hasFix) {
+    if (geoModalSource === "user") {
+      if (!userGeo.hasFix || userGeo.lat == null || userGeo.lon == null) return null;
       return {
         lat: userGeo.lat,
         lon: userGeo.lon,
-        alt: userGeo.alt != null ? `${Math.round(userGeo.alt)} m MSL` : "N/A",
+        alt: userGeo.alt != null && Number.isFinite(userGeo.alt) ? `${Math.round(userGeo.alt)} m` : "N/A · GPS",
         place: "USER DEVICE POSITION",
         sourceLabel: "SOURCE: USER GPS"
       };
@@ -1797,15 +2014,29 @@ window.TacticalNav = {
     }
     return null;
   }
+  function paintSourceButtons() {
+    if (!sourceUserBtn || !sourceCityBtn) return;
+    if (geoModalSource === "user") {
+      sourceUserBtn.className = "flex-1 px-2 py-1.5 border border-neutral-600 bg-neutral-900 text-[9px] uppercase tracking-wider cursor-pointer";
+      sourceCityBtn.className = "flex-1 px-2 py-1.5 border border-neutral-800 bg-black text-[9px] uppercase tracking-wider cursor-pointer text-neutral-400";
+    } else {
+      sourceCityBtn.className = "flex-1 px-2 py-1.5 border border-neutral-600 bg-neutral-900 text-[9px] uppercase tracking-wider cursor-pointer";
+      sourceUserBtn.className = "flex-1 px-2 py-1.5 border border-neutral-800 bg-black text-[9px] uppercase tracking-wider cursor-pointer text-neutral-400";
+    }
+  }
   function paintModal() {
+    paintSourceButtons();
     const g = getActiveGeo();
     if (!g) {
       if (elLat) elLat.textContent = "--";
       if (elLon) elLon.textContent = "--";
       if (elAlt) elAlt.textContent = "--";
+      if (elPressure) elPressure.textContent = "-- hPa";
+      if (elTemperature) elTemperature.textContent = "--°C";
       if (elDecimal) elDecimal.textContent = "--";
       if (elPlace) elPlace.textContent = "NO DATA";
-      if (elSource) elSource.textContent = "SOURCE: UNAVAILABLE";
+      if (elSource) elSource.textContent = geoModalSource === "user" ? "SOURCE: GPS FIX REQUIRED" : "SOURCE: UNAVAILABLE";
+      clearGeoWeather(geoModalSource === "user" ? "REQUEST A GPS FIX TO LOAD POSITION WEATHER" : "WEATHER DATA UNAVAILABLE");
       return;
     }
     const f = fmt(g.lat, g.lon);
@@ -1815,15 +2046,7 @@ window.TacticalNav = {
     if (elDecimal) elDecimal.textContent = f.decimal;
     if (elPlace) elPlace.textContent = g.place;
     if (elSource) elSource.textContent = g.sourceLabel;
-    if (sourceUserBtn && sourceCityBtn) {
-      if (geoModalSource === "user") {
-        sourceUserBtn.className = "flex-1 px-2 py-1.5 border border-neutral-600 bg-neutral-900 text-[9px] uppercase tracking-wider cursor-pointer";
-        sourceCityBtn.className = "flex-1 px-2 py-1.5 border border-neutral-800 bg-black text-[9px] uppercase tracking-wider cursor-pointer text-neutral-400";
-      } else {
-        sourceCityBtn.className = "flex-1 px-2 py-1.5 border border-neutral-600 bg-neutral-900 text-[9px] uppercase tracking-wider cursor-pointer";
-        sourceUserBtn.className = "flex-1 px-2 py-1.5 border border-neutral-800 bg-black text-[9px] uppercase tracking-wider cursor-pointer text-neutral-400";
-      }
-    }
+    loadGeoWeather(g.lat, g.lon);
   }
   function openModal() {
     if (!modal) return;
@@ -1831,6 +2054,47 @@ window.TacticalNav = {
     paintModal();
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+  }
+  function refreshUserPosition() {
+    if (!navigator.geolocation) {
+      if (elWeatherStatus) elWeatherStatus.textContent = "GPS NOT SUPPORTED BY THIS BROWSER";
+      return;
+    }
+    const originalHtml = refreshGpsBtn?.innerHTML;
+    if (refreshGpsBtn) {
+      refreshGpsBtn.disabled = true;
+      refreshGpsBtn.textContent = "LOCATING...";
+    }
+    if (elWeatherStatus) elWeatherStatus.textContent = "REQUESTING GPS POSITION...";
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userGeo.lat = pos.coords.latitude;
+        userGeo.lon = pos.coords.longitude;
+        userGeo.alt = pos.coords.altitude;
+        userGeo.hasFix = true;
+        geoModalSource = "user";
+        applyUserGeoToHeader();
+        if (window.TacticalNav) window.TacticalNav.setUser(userGeo.lat, userGeo.lon);
+        paintModal();
+        if (refreshGpsBtn) {
+          refreshGpsBtn.disabled = false;
+          refreshGpsBtn.innerHTML = originalHtml || "REFRESH GPS";
+        }
+      },
+      (error) => {
+        const messages = {
+          1: "GPS PERMISSION DENIED",
+          2: "GPS POSITION UNAVAILABLE",
+          3: "GPS REQUEST TIMED OUT"
+        };
+        if (elWeatherStatus) elWeatherStatus.textContent = messages[error.code] || "GPS POSITION FAILED";
+        if (refreshGpsBtn) {
+          refreshGpsBtn.disabled = false;
+          refreshGpsBtn.innerHTML = originalHtml || "REFRESH GPS";
+        }
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
   }
   function closeModal() {
     if (!modal) return;
@@ -1842,6 +2106,7 @@ window.TacticalNav = {
   closeBtn?.addEventListener("click", closeModal);
   sourceUserBtn?.addEventListener("click", () => { geoModalSource = "user"; paintModal(); });
   sourceCityBtn?.addEventListener("click", () => { geoModalSource = "city"; paintModal(); });
+  refreshGpsBtn?.addEventListener("click", refreshUserPosition);
   copyBtn?.addEventListener("click", async () => {
     const g = getActiveGeo();
     if (!g) return;

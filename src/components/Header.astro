@@ -19,7 +19,7 @@
       <span class="text-neutral-600">/</span>
       <span class="text-neutral-300" id="geo-coords">--° N, --° W</span>
       <span class="text-neutral-600">/</span>
-      <span class="text-neutral-400">ALT <span class="text-neutral-200" id="geo-alt">-- m MSL</span></span>
+      <span class="text-neutral-400">ALT <span class="text-neutral-200" id="geo-alt">-- m</span></span>
     </button>
 
     <!-- Weather Telemetry -->
@@ -120,7 +120,7 @@
 
 <!-- GEO DETAIL MODAL -->
 <div class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-3 sm:p-6" id="geo-detail-modal">
-  <div class="relative w-full max-w-md bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200 font-mono-numbers">
+  <div class="relative w-full max-w-md max-h-[92dvh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-y-auto text-neutral-200 font-mono-numbers">
     <div class="h-2 camo-strip-pattern border-b border-neutral-800"></div>
 
     <div class="px-4 py-3 border-b border-neutral-800 flex items-center justify-between bg-[#111]">
@@ -155,6 +155,19 @@
           <div class="text-sm text-white font-semibold" id="geo-modal-alt">--</div>
         </div>
         <div class="p-3 bg-[#0e0e0] border border-neutral-800">
+          <div class="text-[9px] text-neutral-500 uppercase tracking-wider mb-1 flex items-center gap-1" id="geo-modal-pressure-label">
+            <span class="material-symbols-outlined text-[12px]">speed</span>
+            <span id="geo-modal-pressure-title">Atmospheric pressure</span>
+          </div>
+          <div class="text-sm text-white font-semibold" id="geo-modal-pressure">-- hPa</div>
+        </div>
+        <div class="p-3 bg-[#0e0e0] border border-neutral-800">
+          <div class="text-[9px] text-neutral-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[12px]">device_thermostat</span> Air temperature · 2 m
+          </div>
+          <div class="text-sm text-white font-semibold" id="geo-modal-temperature">--°C</div>
+        </div>
+        <div class="p-3 bg-[#0e0e0] border border-neutral-800">
           <div class="text-[9px] text-neutral-500 uppercase tracking-wider mb-1">Decimal pair</div>
           <div class="text-sm text-neutral-200 break-all" id="geo-modal-decimal">--</div>
         </div>
@@ -163,14 +176,23 @@
           <div class="text-sm text-neutral-200" id="geo-modal-place">--</div>
         </div>
       </div>
+      <p class="text-[9px] text-neutral-500" id="geo-modal-weather-status" role="status" aria-live="polite">
+        WEATHER DATA IS ESTIMATED FROM THE POSITION · NO DEVICE BAROMETER/THERMOMETER REQUIRED
+      </p>
     </div>
 
     <div class="px-4 py-3 border-t border-neutral-800 bg-[#111] flex items-center justify-between gap-2 text-[10px]">
       <span class="text-neutral-500" id="geo-copy-feedback"></span>
-      <button type="button" class="px-4 py-1.5 font-bold uppercase cursor-pointer flex items-center gap-1 border border-neutral-600 bg-neutral-900 hover:border-neutral-400" id="geo-copy-btn">
-        <span class="material-symbols-outlined text-[13px]">content_copy</span>
-        COPY COORDS
-      </button>
+      <div class="flex gap-2">
+        <button type="button" class="px-3 py-1.5 font-bold uppercase cursor-pointer flex items-center gap-1 border border-neutral-700 bg-black hover:border-neutral-400" id="geo-refresh-gps-btn">
+          <span class="material-symbols-outlined text-[13px]">my_location</span>
+          REFRESH GPS
+        </button>
+        <button type="button" class="px-4 py-1.5 font-bold uppercase cursor-pointer flex items-center gap-1 border border-neutral-600 bg-neutral-900 hover:border-neutral-400" id="geo-copy-btn">
+          <span class="material-symbols-outlined text-[13px]">content_copy</span>
+          COPY COORDS
+        </button>
+      </div>
     </div>
   </div>
 </div>
