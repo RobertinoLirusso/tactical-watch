@@ -531,15 +531,15 @@ async function updateWeatherTelemetry() {
     if (!current || !Number.isFinite(current.temperature_2m)) throw new Error("Invalid data");
     
     // --- Sunrise / Sunset ---
-    const daily = result.daily;
+  const daily = result.daily;
     if (daily?.sunrise?.[0] && daily?.sunset?.[0]) {
       sunTimes.riseISO = daily.sunrise[0];
       sunTimes.setISO = daily.sunset[0];
-      sunTimes.riseMs = new Date(daily.sunrise[0]).getTime();
-      sunTimes.setMs = new Date(daily.sunset[0]).getTime();
+      sunTimes.riseMs = zonedWallTimeToUtcMs(daily.sunrise[0], currentTimezone);
+      sunTimes.setMs = zonedWallTimeToUtcMs(daily.sunset[0], currentTimezone);
 
-      if (sunRiseEl) sunRiseEl.textContent = formatSunTime(sunTimes.riseISO, currentTimezone);
-      if (sunSetEl) sunSetEl.textContent = formatSunTime(sunTimes.setISO, currentTimezone);
+      if (sunRiseEl) sunRiseEl.textContent = formatSunTime(sunTimes.riseISO);
+      if (sunSetEl) sunSetEl.textContent = formatSunTime(sunTimes.setISO);
       updateSunCountdown();
     } else {
       sunTimes = { riseISO: null, setISO: null, riseMs: null, setMs: null };
@@ -581,16 +581,81 @@ async function updateWeatherTelemetry() {
   }
 }
 
-function formatSunTime(isoString, timeZone) {
+/** Open-Meteo daily sunrise/sunset: "YYYY-MM-DDTHH:MM" en la timezone pedida (sin offset). */
+function parseOpenMeteoLocalParts(isoLocal) {
+  const m = String(isoLocal).match(
+    /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/
+  );
+  if (!m) return null;
+  return {
+    y: +m[1],
+    mo: +m[2],
+    d: +m[3],
+    h: +m[4],
+    mi: +m[5],
+    s: +(m[6] || 0)
+  };
+}
+
+/**
+ * Convierte "hora de pared" en `timeZone` → timestamp UTC (ms).
+ * Evita el bug de new Date("2026-10-31T06:22") = hora del browser.
+ */
+function zonedWallTimeToUtcMs(isoLocal, timeZone) {
+  const p = parseOpenMeteoLocalParts(isoLocal);
+  if (!p) {
+    const t = Date.parse(isoLocal);
+    return Number.isFinite(t) ? t : null;
+  }
+
+  // 1) Suponer que y-mo-d h:mi:s es UTC
+  const utcGuess = Date.UTC(p.y, p.mo - 1, p.d, p.h, p.mi, p.s);
+
+  // 2) Ver qué hora de pared muestra esa zona en ese instante
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23"
+    })
+      .formatToParts(new Date(utcGuess))
+      .filter((x) => x.type !== "literal")
+      .map((x) => [x.type, x.value])
+  );
+
+  const asIfInTz = Date.UTC(
+    +parts.year,
+    +parts.month - 1,
+    +parts.day,
+    +parts.hour,
+    +parts.minute,
+    +parts.second
+  );
+
+  // 3) offset = (pared en TZ) - (guess UTC) → restar para obtener el UTC real de esa pared
+  return utcGuess - (asIfInTz - utcGuess);
+}
+
+/** Mostrar HH:MM tal cual vino de la API (ya es hora local de la zona). */
+function formatSunTime(isoString) {
   if (!isoString) return "--:--";
+  const p = parseOpenMeteoLocalParts(isoString);
+  if (p) {
+    return `${String(p.h).padStart(2, "0")}:${String(p.mi).padStart(2, "0")}`;
+  }
+  // Fallback si viniera con Z / offset
   try {
-    const d = new Date(isoString);
     return new Intl.DateTimeFormat("en-GB", {
-      timeZone: timeZone || currentTimezone,
+      timeZone: currentTimezone,
       hour: "2-digit",
       minute: "2-digit",
       hour12: false
-    }).format(d);
+    }).format(new Date(isoString));
   } catch {
     return "--:--";
   }
@@ -614,9 +679,8 @@ function updateSunCountdown() {
     return;
   }
 
-  // Próximo evento: si ya pasó el set de hoy, el próximo es el rise de mañana (o el que quede)
-  let nextLabel = "";
-  let nextMs = null;
+  let nextLabel;
+  let nextMs;
 
   if (now < riseMs) {
     nextMs = riseMs - now;
@@ -625,7 +689,8 @@ function updateSunCountdown() {
     nextMs = setMs - now;
     nextLabel = "→ SS ";
   } else {
-    // Después del sunset: mostrar hasta el próximo sunrise (~ +24h del rise de hoy)
+    // Tras el sunset de hoy: usar +24h solo como fallback;
+    // idealmente pedí forecast_days: 2 y el sunrise de mañana
     nextMs = riseMs + 24 * 60 * 60 * 1000 - now;
     nextLabel = "→ SR ";
   }
