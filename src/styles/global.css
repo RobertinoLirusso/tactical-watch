@@ -285,9 +285,6 @@ html, body {
 #map-recenter-btn,
 #map-waypoint-btn,
 #map-cache-btn,
-#map-track-start-btn,
-#map-track-stop-btn,
-#map-track-clear-btn,
 #open-notes-btn,
 #map-city-btn,
 #map-copy-coords-btn,
@@ -304,9 +301,6 @@ html, body {
 #map-recenter-btn:hover,
 #map-waypoint-btn:hover,
 #map-cache-btn:hover,
-#map-track-start-btn:hover,
-#map-track-stop-btn:hover,
-#map-track-clear-btn:hover,
 #map-copy-coords-btn:hover,
 #med-reset-defaults-btn:hover,
 #med-save-data-btn:hover,
@@ -315,12 +309,6 @@ html, body {
   border-color: #a3704c !important;
   color: #ffffff !important;
 }
-#map-track-start-btn:disabled,
-#map-track-stop-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 /* ============================================================
    MORSE PIP + WHISTLE PULSE
    ============================================================ */

@@ -69,30 +69,7 @@
   <span class="text-neutral-400" id="nav-status">NO WAYPOINT</span>
 </div>
 
-    <section class="px-3 py-2.5 bg-[#111] border-b border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono-numbers" aria-label="Mission position log">
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="text-neutral-300 uppercase tracking-wider font-semibold">MISSION LOG · LAST 24H</span>
-        <span class="text-neutral-600">|</span>
-        <label for="map-track-interval" class="text-neutral-500 uppercase">GPS EVERY</label>
-        <select id="map-track-interval" class="bg-black border border-neutral-700 text-neutral-200 px-1.5 py-1 text-[10px]">
-          <option value="1">1 MIN</option>
-          <option value="2">2 MIN</option>
-          <option value="5" selected>5 MIN</option>
-          <option value="10">10 MIN</option>
-          <option value="15">15 MIN</option>
-          <option value="30">30 MIN</option>
-        </select>
-        <span class="text-neutral-400" id="map-track-count">0 POINTS</span>
-      </div>
-      <div class="flex flex-wrap items-center gap-1.5">
-        <button type="button" class="px-2 py-1 border border-neutral-700 bg-black text-neutral-300 hover:border-neutral-500 uppercase font-semibold cursor-pointer" id="map-track-start-btn">START TRACK</button>
-        <button type="button" class="px-2 py-1 border border-neutral-700 bg-black text-neutral-300 hover:border-neutral-500 uppercase font-semibold cursor-pointer" id="map-track-stop-btn" disabled>STOP</button>
-        <button type="button" class="px-2 py-1 border border-neutral-800 bg-black text-neutral-500 hover:text-neutral-200 uppercase cursor-pointer" id="map-track-clear-btn">CLEAR</button>
-      </div>
-      <span class="w-full text-neutral-500" id="map-track-status" role="status" aria-live="polite">TRACK OFF · GPS POINTS ARE STORED ON THIS DEVICE</span>
-    </section>
-
-        <!-- Map Container -->
+    <!-- Map Container -->
     <div class="relative w-full shrink-0 h-[55dvh] min-h-[280px] sm:h-[520px] bg-[#0c1017]" id="leaflet-map-wrapper">
       <div class="w-full h-full" id="leaflet-offline-map"></div>
       
