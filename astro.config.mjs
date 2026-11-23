@@ -6,10 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://tactical-watch.onrender.com/',
-  output: 'server',
-  adapter: node({
-    mode: 'standalone',
-  }),
+  output: 'static',
   server: {
     host: '0.0.0.0',
     port: 3000,
