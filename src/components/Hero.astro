@@ -1,71 +1,63 @@
 ---
-// Hero.astro - Tactical Clock + Location (Stitch design)
+// Hero.astro - Original Centered Tactical Expedition Clock
 ---
 
-<!-- Tactical Top Badge & Location -->
-<div class="w-full text-center mb-2">
-  <!-- Emergency Medical ID Button (ICE) -->
-  <div class="mb-2 flex items-center justify-center">
-    <button 
-      class="max-w-full inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1.5 sm:py-1 font-mono-numbers text-[9px] tracking-wider uppercase cursor-pointer select-none transition-all" 
-      id="open-medical-id-btn" 
-      title="Operator Emergency & Personal Medical ID (ICE)"
-    >
-      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
-      <span class="material-symbols-outlined text-[13px]">medical_information</span>
-      <span class="hidden sm:inline">[ ✚ EMERGENCY MEDICAL & PERSONAL ID // ICE ]</span>
-      <span class="sm:hidden">[ ✚ MEDICAL ID // ICE ]</span>
-      <span class="text-[8px] px-1 py-0.2 bg-black/40 border border-amber-500/30 font-semibold text-amber-200">PERSONALES</span>
-    </button>
-  </div>
-
-  <!-- Tactical Badge -->
-  <h1 class="max-w-full inline-flex items-center gap-2 px-2.5 py-0.5 m-0 border border-neutral-800 bg-neutral-950 text-[8px] sm:text-[9px] font-normal tracking-[0.2em] sm:tracking-[0.3em] font-mono-numbers text-neutral-400 uppercase shadow-md">
-    <span class="w-1 h-1 bg-neutral-400" aria-hidden="true"></span>
-    TACTICAL EXPEDITION CHRONOMETER
+<section aria-label="Primary Digital Clock" class="w-full max-w-5xl mx-auto flex flex-col items-center justify-center text-center my-2 sm:my-4">
+  <h1 class="text-[10px] sm:text-xs font-mono-numbers tracking-[0.35em] text-neutral-500 uppercase font-semibold m-0">
+    TACTICAL EXPEDITION CLOCK
   </h1>
 
-  <!-- Location -->
-  <div class="px-2 text-base sm:text-lg md:text-2xl font-light tracking-[0.15em] sm:tracking-[0.3em] uppercase text-neutral-200 drop-shadow mt-1" id="location-name">
-    London, United Kingdom · Europe
+  <div class="mt-2 px-3 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
+    <span class="text-base sm:text-xl md:text-2xl font-medium tracking-wider text-neutral-200 uppercase" id="location-name">
+      London, United Kingdom · Europe
+    </span>
+    <span class="text-neutral-700 hidden sm:inline" aria-hidden="true">|</span>
+    <span class="text-xs sm:text-sm font-mono-numbers tracking-[0.2em] text-neutral-400 uppercase" id="current-date">
+      TUESDAY, OCTOBER 13, 2026
+    </span>
   </div>
 
-  <!-- Date -->
-  <div class="px-2 text-[10px] sm:text-xs md:text-sm font-light tracking-[0.15em] sm:tracking-[0.25em] text-neutral-400 mt-1 uppercase" id="current-date">
-    TUESDAY, OCTOBER 13, 2026
+  <!-- Massive Centered Digital Clock Digits -->
+  <div class="mt-2 sm:mt-3 mb-2 flex items-baseline justify-center font-mono-numbers select-none glow-subtle">
+    <span
+      class="text-[17vw] sm:text-[12vw] lg:text-[7.75rem] leading-none font-bold tracking-tight"
+      id="hours"
+      style="font-family: 'Orbitron', 'JetBrains Mono', monospace;"
+    >21</span>
+
+    <span class="text-[12vw] sm:text-[8.5vw] lg:text-[5.5rem] leading-none text-neutral-700 font-light px-1 sm:px-2 animate-pulse" aria-hidden="true">:</span>
+
+    <span
+      class="text-[17vw] sm:text-[12vw] lg:text-[7.75rem] leading-none font-bold tracking-tight"
+      id="minutes"
+      style="font-family: 'Orbitron', 'JetBrains Mono', monospace;"
+    >03</span>
+
+    <span class="text-[12vw] sm:text-[8.5vw] lg:text-[5.5rem] leading-none text-neutral-700 font-light px-1 sm:px-2 animate-pulse" aria-hidden="true">:</span>
+
+    <span
+      class="text-[17vw] sm:text-[12vw] lg:text-[7.75rem] leading-none font-bold tracking-tight"
+      id="seconds"
+      style="font-family: 'Orbitron', 'JetBrains Mono', monospace;"
+    >02</span>
+
+    <div class="flex flex-col justify-end pb-1 sm:pb-2 pl-2 sm:pl-3 select-none">
+      <span
+        class="border rounded-sm px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-bold tracking-widest font-mono-numbers"
+        id="clock-ampm"
+        style="font-family: 'Orbitron', monospace;"
+      >PM</span>
+    </div>
   </div>
-</div>
 
-<!-- Massive Digital Clock Digits -->
-<div class="my-1 md:my-3 flex items-baseline justify-center font-mono-numbers tracking-tight select-none">
-  <span 
-    class="text-[17vw] sm:text-[13vw] leading-none font-bold text-[#f5f5f5] tracking-tighter" 
-    id="hours" 
-    style="font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;"
-  >21</span>
-
-  <span class="text-[12vw] sm:text-[10vw] leading-none text-neutral-600 font-light px-0.5 sm:px-1 md:px-2 animate-pulse">:</span>
-
-  <span 
-    class="text-[17vw] sm:text-[13vw] leading-none font-bold text-[#f5f5f5] tracking-tighter" 
-    id="minutes" 
-    style="font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;"
-  >03</span>
-
-  <span class="text-[12vw] sm:text-[10vw] leading-none text-neutral-600 font-light px-0.5 sm:px-1 md:px-2 animate-pulse">:</span>
-
-  <span 
-    class="text-[17vw] sm:text-[13vw] leading-none font-bold text-neutral-300 tracking-tighter" 
-    id="seconds" 
-    style="font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;"
-  >02</span>
-
-  <!-- AM/PM -->
-  <div class="flex flex-col justify-end pb-1.5 md:pb-3 pl-1 select-none">
-    <span 
-      class="text-[10px] sm:text-xs md:text-sm font-bold tracking-wider sm:tracking-widest text-neutral-200 font-mono-numbers px-1 sm:px-1.5 py-0.5 bg-neutral-950 border border-neutral-700 shadow-sm" 
-      id="clock-ampm" 
-      style="font-family: Orbitron, monospace;"
-    >PM</span>
-  </div>
-</div>
+  <!-- Original Operator Medical ID Trigger below main clock -->
+  <button
+    class="mt-1 px-3 py-1 rounded-sm text-[10px] font-mono-numbers tracking-[0.2em] uppercase flex items-center gap-1.5 cursor-pointer transition-all"
+    id="open-medical-id-btn"
+    title="Operator Emergency & Personal Medical ID (ICE)"
+    type="button"
+  >
+    <span class="material-symbols-outlined text-[13px]">medical_information</span>
+    <span>[ OPERATOR MEDICAL ID // I.C.E. ]</span>
+  </button>
+</section>

@@ -1,56 +1,43 @@
 ---
-// Footer.astro - Tactical Map & Survival buttons + Camo bar
+// Footer.astro - Original Tactical Watch Bottom Action Dock
 ---
 
-<!-- Tactical Action Buttons + Camo Strip -->
-<div class="relative z-10 w-full px-3 sm:px-4 mt-3 sm:mt-0 mb-2 flex flex-col items-center justify-center gap-2.5">
-  
-  <!-- Buttons: Tactical Map + Survival Protocols + Notes -->
-  <div class="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 whitespace-nowrap sm:flex-wrap">
-    <button 
-      class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 sm:py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+<footer class="relative z-10 w-full px-3 sm:px-6 mt-3 mb-3 flex flex-col items-center justify-center gap-2.5">
+  <nav aria-label="Field Utilities" class="w-full max-w-4xl flex flex-wrap items-center justify-center gap-2">
+    <button
+      class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-sm text-[10px] sm:text-xs font-mono-numbers font-semibold tracking-[0.15em] uppercase cursor-pointer whitespace-nowrap transition-all"
       id="open-map-modal-btn"
+      type="button"
     >
-      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
-      <span class="material-symbols-outlined text-[13px]">map</span>
-      <span>[ ⛯ TACTICAL MAP ]</span>
-      <span class="hidden min-[400px]:inline text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">TACTICAL GRID</span>
+      <span class="material-symbols-outlined text-[15px]">map</span>
+      <span>[ TACTICAL MAP ]</span>
     </button>
 
-    <button 
-      class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 sm:py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+    <button
+      class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-sm text-[10px] sm:text-xs font-mono-numbers font-semibold tracking-[0.15em] uppercase cursor-pointer whitespace-nowrap transition-all"
       id="open-survival-modal-btn"
+      type="button"
     >
-      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
-      <span class="material-symbols-outlined text-[13px]">menu_book</span>
-      <span>SURVIVAL PROTOCOLS</span>
-      <span class="hidden min-[400px]:inline text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">MIL-STD FM 21-76</span>
+      <span class="material-symbols-outlined text-[15px]">menu_book</span>
+      <span>[ SURVIVAL PROTOCOLS ]</span>
     </button>
 
-    <button 
-      class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 sm:py-1.5 text-[10px] font-mono-numbers tracking-widest uppercase cursor-pointer whitespace-nowrap transition-all" 
+    <button
+      class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-sm text-[10px] sm:text-xs font-mono-numbers font-semibold tracking-[0.15em] uppercase cursor-pointer whitespace-nowrap transition-all"
       id="open-notes-btn"
       title="Tactical field notes"
+      type="button"
     >
-      <span class="w-1.5 h-1.5 bg-white animate-pulse"></span>
-      <span class="material-symbols-outlined text-[13px]">edit_note</span>
-      <span>FIELD NOTES</span>
-      <span class="hidden min-[400px]:inline text-[9px] px-1.5 py-0.2 bg-black/40 border border-amber-500/30 text-amber-200 font-semibold">LOCAL LOG</span>
+      <span class="material-symbols-outlined text-[15px]">edit_note</span>
+      <span>[ FIELD NOTES ]</span>
     </button>
-  </div>
+  </nav>
 
-  <!-- Camo Strip -->
-  <div class="w-full max-w-7xl flex items-center gap-3">
+  <div class="w-full max-w-6xl flex items-center gap-3 pt-0.5">
     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-neutral-800 to-neutral-700"></div>
-    
-    <div class="h-4 w-full max-w-2xl relative overflow-hidden border border-neutral-800 shadow-lg camo-strip-pattern">
-      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
-      <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
-      <div class="absolute inset-x-0 bottom-0 h-px bg-black"></div>
-    </div>
-    
+    <span class="text-[9px] font-mono-numbers tracking-[0.3em] text-neutral-600 uppercase whitespace-nowrap">
+      TACTICAL WATCH
+    </span>
     <div class="h-px flex-1 bg-gradient-to-l from-transparent via-neutral-800 to-neutral-700"></div>
   </div>
-</div>
-
-<div class="relative z-10 w-full pb-2"></div>
+</footer>

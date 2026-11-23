@@ -2126,6 +2126,9 @@ function updateClock() {
   }
   stepTimer();
   updateSunCountdown();
+  if (typeof window.__stepClockAlarm === "function") {
+    window.__stepClockAlarm(now);
+  }
 
 }
 
@@ -2195,4 +2198,579 @@ initUserPositionOnLoad();
   });
   cookingEl?.addEventListener("change", calc);
   calc();
+})();
+
+// ===================== THEME SELECTOR =====================
+(function initThemeSelector() {
+  const THEME_KEY = "tactical-watch-theme";
+  const THEMES = {
+    default: { swatch: "#d4a373", metaColor: "#000000" },
+    bw: { swatch: "#ffffff", metaColor: "#000000" },
+    military: { swatch: "#84cc16", metaColor: "#030704" },
+    arctic: { swatch: "#38bdf8", metaColor: "#02060b" }
+  };
+
+  const selectEl = document.getElementById("theme-select");
+  const swatchEl = document.getElementById("theme-swatch");
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+
+  function applyTheme(themeKey, persist = true) {
+    const validKey = Object.prototype.hasOwnProperty.call(THEMES, themeKey) ? themeKey : "default";
+    document.documentElement.setAttribute("data-theme", validKey);
+
+    const cfg = THEMES[validKey];
+    if (swatchEl) swatchEl.style.backgroundColor = cfg.swatch;
+    if (metaThemeColor) metaThemeColor.setAttribute("content", cfg.metaColor);
+    if (selectEl && selectEl.value !== validKey) selectEl.value = validKey;
+
+    if (persist) {
+      try {
+        localStorage.setItem(THEME_KEY, validKey);
+      } catch (e) {}
+    }
+  }
+
+  let initialTheme = "default";
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved && Object.prototype.hasOwnProperty.call(THEMES, saved)) {
+      initialTheme = saved;
+    }
+  } catch (e) {}
+
+  applyTheme(initialTheme, false);
+
+  selectEl?.addEventListener("change", (e) => {
+    initAudioContext();
+    applyTheme(e.target.value, true);
+  });
+})();
+
+// ===================== DIGITAL ALARM CLOCK =====================
+(function initDigitalAlarmClock() {
+  const ALARM_KEY = "tactical-watch-alarm";
+  const ALARM_VISIBLE_KEY = "tactical-watch-alarm-visible";
+  const CLOCK_ALARM_DURATION_MS = 60000;
+  const DEFAULT_DOC_TITLE = document.title;
+
+  const moduleEl = document.getElementById("alarm-module");
+  const iconEl = document.getElementById("alarm-icon");
+  const statusBadgeEl = document.getElementById("alarm-status-badge");
+  const countdownEl = document.getElementById("alarm-countdown");
+  const timeInputEl = document.getElementById("alarm-time-input");
+  const labelInputEl = document.getElementById("alarm-label-input");
+  const toggleBtnEl = document.getElementById("alarm-toggle-btn");
+  const toggleIconEl = document.getElementById("alarm-toggle-icon");
+  const toggleLabelEl = document.getElementById("alarm-toggle-label");
+  const notifyBtnEl = document.getElementById("alarm-notify-btn");
+  const notifyLabelEl = document.getElementById("alarm-notify-label");
+  const testBtnEl = document.getElementById("alarm-test-btn");
+  const snoozeBtnEl = document.getElementById("alarm-snooze-btn");
+  const dismissBtnEl = document.getElementById("alarm-dismiss-btn");
+  const hideBtnEl = document.getElementById("alarm-hide-btn");
+  const headerToggleBtnEl = document.getElementById("toggle-alarm-module-btn");
+  const headerToggleIconEl = document.getElementById("toggle-alarm-module-icon");
+  const headerToggleLabelEl = document.getElementById("toggle-alarm-module-label");
+  const alertBannerEl = document.getElementById("alarm-alert-banner");
+  const alertMessageEl = document.getElementById("alarm-alert-message");
+  const alertMetaEl = document.getElementById("alarm-alert-meta");
+
+  if (!moduleEl || !timeInputEl || !toggleBtnEl) return;
+
+  let alarmState = {
+    time: "07:00",
+    enabled: false,
+    label: ""
+  };
+
+  let isModuleVisible = true;
+  let snoozeTarget = null; // { time: "HH:MM", dateKey: "YYYY-MM-DD" }
+  let skipMinuteKey = null;
+  let lastTriggeredKey = null;
+  let isRinging = false;
+  let clockAlarmInterval = null;
+  let clockAlarmTimeout = null;
+  let activeNotification = null;
+
+  function loadModuleVisibility() {
+    try {
+      const saved = localStorage.getItem(ALARM_VISIBLE_KEY);
+      isModuleVisible = saved !== "false";
+    } catch (e) {
+      isModuleVisible = true;
+    }
+    document.documentElement.setAttribute("data-alarm-hidden", isModuleVisible ? "false" : "true");
+  }
+
+  function setModuleVisible(visible, persist = true) {
+    isModuleVisible = Boolean(visible);
+    document.documentElement.setAttribute("data-alarm-hidden", isModuleVisible ? "false" : "true");
+    if (persist) {
+      try {
+        localStorage.setItem(ALARM_VISIBLE_KEY, isModuleVisible ? "true" : "false");
+      } catch (e) {}
+    }
+    renderHeaderToggle();
+  }
+
+  function renderHeaderToggle() {
+    if (!headerToggleBtnEl) return;
+    headerToggleBtnEl.setAttribute("aria-expanded", isModuleVisible ? "true" : "false");
+    if (headerToggleIconEl) {
+      headerToggleIconEl.textContent = isModuleVisible
+        ? "alarm"
+        : (alarmState.enabled || snoozeTarget ? "alarm_on" : "visibility");
+    }
+    if (headerToggleLabelEl) {
+      if (isModuleVisible) {
+        headerToggleLabelEl.textContent = "HIDE ALARM";
+      } else if (snoozeTarget) {
+        headerToggleLabelEl.textContent = `ALARM · ${snoozeTarget.time}`;
+      } else if (alarmState.enabled) {
+        headerToggleLabelEl.textContent = `ALARM · ${alarmState.time}`;
+      } else {
+        headerToggleLabelEl.textContent = "SHOW ALARM";
+      }
+    }
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(ALARM_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.time === "string" && /^\d{2}:\d{2}$/.test(parsed.time)) {
+        alarmState.time = parsed.time;
+      }
+      if (parsed && typeof parsed.enabled === "boolean") {
+        alarmState.enabled = parsed.enabled;
+      }
+      if (parsed && typeof parsed.label === "string") {
+        alarmState.label = parsed.label.slice(0, 28);
+      }
+    } catch (e) {}
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(ALARM_KEY, JSON.stringify(alarmState));
+    } catch (e) {}
+  }
+
+  function getClockParts(now = new Date()) {
+    try {
+      const formatter = new Intl.DateTimeFormat("en-CA", {
+        timeZone: currentTimezone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23"
+      });
+      const map = Object.fromEntries(
+        formatter
+          .formatToParts(now)
+          .filter((p) => p.type !== "literal")
+          .map((p) => [p.type, p.value])
+      );
+      const hh = String(parseInt(map.hour, 10) % 24).padStart(2, "0");
+      const mm = String(parseInt(map.minute, 10)).padStart(2, "0");
+      const ss = parseInt(map.second, 10) || 0;
+      const dateKey = `${map.year}-${map.month}-${map.day}`;
+      return { hh, mm, ss, hhmm: `${hh}:${mm}`, dateKey };
+    } catch (e) {
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      const ss = now.getSeconds();
+      const dateKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      return { hh, mm, ss, hhmm: `${hh}:${mm}`, dateKey };
+    }
+  }
+
+  function getNotificationStatus() {
+    if (!("Notification" in window)) return "unsupported";
+    return Notification.permission;
+  }
+
+  async function ensureNotificationPermission() {
+    if (!("Notification" in window)) return "unsupported";
+    if (Notification.permission === "default") {
+      try {
+        await Notification.requestPermission();
+      } catch (e) {}
+    }
+    renderNotifyButton();
+    return Notification.permission;
+  }
+
+  function renderNotifyButton() {
+    if (!notifyBtnEl || !notifyLabelEl) return;
+    const perm = getNotificationStatus();
+    if (perm === "granted") {
+      notifyLabelEl.textContent = "NOTIFY: ON";
+      notifyBtnEl.title = "Browser notifications enabled";
+    } else if (perm === "denied") {
+      notifyLabelEl.textContent = "NOTIFY: BLOCKED";
+      notifyBtnEl.title = "Notifications blocked in browser site settings";
+    } else if (perm === "unsupported") {
+      notifyLabelEl.textContent = "NOTIFY: N/A";
+      notifyBtnEl.title = "Browser does not support notifications";
+    } else {
+      notifyLabelEl.textContent = "ENABLE NOTIFY";
+      notifyBtnEl.title = "Click to allow browser notifications";
+    }
+  }
+
+  function showInlineNotice(message, meta) {
+    if (!alertBannerEl || !alertMessageEl || !alertMetaEl) return;
+    alertMessageEl.textContent = message;
+    alertMetaEl.textContent = meta || "";
+    alertBannerEl.classList.remove("hidden");
+    alertBannerEl.classList.add("flex");
+  }
+
+  function hideInlineNotice() {
+    if (!alertBannerEl) return;
+    alertBannerEl.classList.add("hidden");
+    alertBannerEl.classList.remove("flex");
+  }
+
+  function dispatchBrowserNotification({ title, body, tag }) {
+    if (!("Notification" in window) || Notification.permission !== "granted") {
+      return false;
+    }
+    try {
+      if (activeNotification) {
+        try { activeNotification.close(); } catch (e) {}
+      }
+      const n = new Notification(title, {
+        body,
+        icon: "/apple-touch-icon.png",
+        badge: "/favicon.svg",
+        tag: tag || "tactical-watch-alarm",
+        requireInteraction: true
+      });
+      n.onclick = () => {
+        try { window.focus(); } catch (e) {}
+        n.close();
+      };
+      activeNotification = n;
+      return true;
+    } catch (e) {
+      try {
+        const n = new Notification(title, { body, tag: tag || "tactical-watch-alarm" });
+        n.onclick = () => {
+          try { window.focus(); } catch (e) {}
+          n.close();
+        };
+        activeNotification = n;
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+  }
+
+  function playClockAlarmBurst() {
+    playBeep(1760, 80, 0, 0.14);
+    playBeep(2349, 80, 110, 0.14);
+    playBeep(1760, 80, 240, 0.14);
+    playBeep(2349, 110, 350, 0.14);
+  }
+
+  function stopClockAlarmSound() {
+    if (clockAlarmInterval) {
+      clearInterval(clockAlarmInterval);
+      clockAlarmInterval = null;
+    }
+    if (clockAlarmTimeout) {
+      clearTimeout(clockAlarmTimeout);
+      clockAlarmTimeout = null;
+    }
+  }
+
+  function computeCountdownText(now = new Date()) {
+    const targetHHMM = snoozeTarget ? snoozeTarget.time : (alarmState.enabled ? alarmState.time : null);
+    if (!targetHHMM) return "";
+    const [th, tm] = targetHHMM.split(":").map((v) => parseInt(v, 10));
+    if (!Number.isFinite(th) || !Number.isFinite(tm)) return "";
+    const parts = getClockParts(now);
+    const curSec = parseInt(parts.hh, 10) * 3600 + parseInt(parts.mm, 10) * 60 + parts.ss;
+    const tgtSec = th * 3600 + tm * 60;
+    let diff = tgtSec - curSec;
+    if (diff <= 0) diff += 86400;
+    if (diff < 60) return `IN ${diff}S`;
+    const totalMin = Math.ceil(diff / 60);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    return h > 0 ? `IN ${h}H ${String(m).padStart(2, "0")}M` : `IN ${m}M`;
+  }
+
+  function renderAlarmUI(now = new Date()) {
+    if (timeInputEl && timeInputEl.value !== alarmState.time) {
+      timeInputEl.value = alarmState.time;
+    }
+    if (labelInputEl && labelInputEl.value !== alarmState.label) {
+      labelInputEl.value = alarmState.label;
+    }
+
+    if (toggleBtnEl) {
+      toggleBtnEl.setAttribute("data-armed", alarmState.enabled ? "true" : "false");
+    }
+    if (toggleLabelEl) {
+      toggleLabelEl.textContent = alarmState.enabled ? "ARMED · OFF" : "SET ALARM";
+    }
+    if (toggleIconEl) {
+      toggleIconEl.textContent = alarmState.enabled ? "alarm_off" : "alarm_on";
+    }
+
+    if (statusBadgeEl) {
+      if (isRinging) {
+        statusBadgeEl.textContent = "RINGING";
+      } else if (snoozeTarget) {
+        statusBadgeEl.textContent = `SNOOZED · ${snoozeTarget.time}`;
+      } else if (alarmState.enabled) {
+        statusBadgeEl.textContent = `ARMED · ${alarmState.time}`;
+      } else {
+        statusBadgeEl.textContent = "OFF";
+      }
+    }
+
+    if (iconEl) {
+      iconEl.textContent = isRinging ? "notifications_active" : (alarmState.enabled || snoozeTarget ? "alarm_on" : "alarm");
+    }
+
+    if (countdownEl) {
+      countdownEl.textContent = (alarmState.enabled || snoozeTarget) && !isRinging
+        ? computeCountdownText(now)
+        : "";
+    }
+
+    if (moduleEl) {
+      moduleEl.classList.toggle("alarm-ringing", isRinging);
+    }
+
+    if (snoozeBtnEl) snoozeBtnEl.classList.toggle("hidden", !isRinging);
+    if (dismissBtnEl) dismissBtnEl.classList.toggle("hidden", !isRinging);
+
+    renderNotifyButton();
+    renderHeaderToggle();
+  }
+
+  function triggerClockAlarm({ isTest = false, timeStr = alarmState.time } = {}) {
+    if (!isModuleVisible) {
+      setModuleVisible(true, false);
+    }
+    stopClockAlarmSound();
+    initAudioContext();
+    playClockAlarmBurst();
+    clockAlarmInterval = setInterval(playClockAlarmBurst, 1100);
+    clockAlarmTimeout = setTimeout(() => {
+      stopClockAlarmSound();
+    }, CLOCK_ALARM_DURATION_MS);
+
+    isRinging = true;
+    const labelText = alarmState.label.trim();
+    const cityInfo = cityTelemetry[currentTimezone];
+    const zoneLabel = cityInfo?.name || currentTimezone;
+    const titlePrefix = isTest ? "[TEST] " : "";
+    const notifTitle = `${titlePrefix}Tactical Watch Alarm — ${timeStr}`;
+    const notifBody = labelText
+      ? `${labelText} · ${zoneLabel}`
+      : `Scheduled alarm reached (${zoneLabel})`;
+
+    const sent = dispatchBrowserNotification({
+      title: notifTitle,
+      body: notifBody,
+      tag: isTest ? "tactical-watch-alarm-test" : "tactical-watch-alarm"
+    });
+
+    const perm = getNotificationStatus();
+    const metaSuffix = sent
+      ? `BROWSER NOTIFICATION SENT · ${zoneLabel}`
+      : perm === "denied"
+        ? "BROWSER NOTIFICATIONS BLOCKED · IN-APP ALERT ACTIVE"
+        : "ALLOW NOTIFICATIONS FOR SYSTEM POPUPS";
+
+    showInlineNotice(
+      `${isTest ? "TEST ALARM" : "ALARM"} ${timeStr}${labelText ? ` — ${labelText}` : ""}`,
+      metaSuffix
+    );
+    document.title = `ALARM ${timeStr} | ${DEFAULT_DOC_TITLE}`;
+    renderAlarmUI();
+  }
+
+  function dismissClockAlarm() {
+    stopClockAlarmSound();
+    isRinging = false;
+    snoozeTarget = null;
+    if (activeNotification) {
+      try { activeNotification.close(); } catch (e) {}
+      activeNotification = null;
+    }
+    document.title = DEFAULT_DOC_TITLE;
+    hideInlineNotice();
+    renderAlarmUI();
+  }
+
+  function snoozeClockAlarm() {
+    stopClockAlarmSound();
+    isRinging = false;
+    if (activeNotification) {
+      try { activeNotification.close(); } catch (e) {}
+      activeNotification = null;
+    }
+    document.title = DEFAULT_DOC_TITLE;
+
+    const now = new Date();
+    const parts = getClockParts(now);
+    const totalMinutes = parseInt(parts.hh, 10) * 60 + parseInt(parts.mm, 10) + 5;
+    const snoozeH = String(Math.floor(totalMinutes / 60) % 24).padStart(2, "0");
+    const snoozeM = String(totalMinutes % 60).padStart(2, "0");
+    const snoozeDate = new Date(now.getTime() + 5 * 60 * 1000);
+    const snoozeParts = getClockParts(snoozeDate);
+    snoozeTarget = {
+      time: `${snoozeH}:${snoozeM}`,
+      dateKey: snoozeParts.dateKey
+    };
+    hideInlineNotice();
+    renderAlarmUI(now);
+  }
+
+  function stepClockAlarm(now = new Date()) {
+    const parts = getClockParts(now);
+    const minuteKey = `${parts.dateKey}|${parts.hhmm}|${currentTimezone}`;
+
+    if (skipMinuteKey && skipMinuteKey !== minuteKey) {
+      skipMinuteKey = null;
+    }
+
+    // Check active snooze first
+    if (snoozeTarget && parts.hhmm === snoozeTarget.time && parts.dateKey === snoozeTarget.dateKey) {
+      const snoozeTime = snoozeTarget.time;
+      snoozeTarget = null;
+      lastTriggeredKey = minuteKey;
+      triggerClockAlarm({ isTest: false, timeStr: snoozeTime });
+      return;
+    }
+
+    // Check primary scheduled alarm
+    if (
+      alarmState.enabled &&
+      parts.hhmm === alarmState.time &&
+      skipMinuteKey !== minuteKey &&
+      lastTriggeredKey !== minuteKey
+    ) {
+      lastTriggeredKey = minuteKey;
+      triggerClockAlarm({ isTest: false, timeStr: alarmState.time });
+      return;
+    }
+
+    if (!isRinging && (alarmState.enabled || snoozeTarget) && countdownEl) {
+      countdownEl.textContent = computeCountdownText(now);
+    }
+  }
+
+  window.__stepClockAlarm = stepClockAlarm;
+
+  loadModuleVisibility();
+  loadState();
+  renderAlarmUI();
+
+  timeInputEl.addEventListener("change", () => {
+    const val = timeInputEl.value;
+    if (!/^\d{2}:\d{2}$/.test(val)) return;
+    alarmState.time = val;
+    lastTriggeredKey = null;
+    snoozeTarget = null;
+    if (alarmState.enabled) {
+      const parts = getClockParts();
+      skipMinuteKey = parts.hhmm === alarmState.time ? `${parts.dateKey}|${parts.hhmm}|${currentTimezone}` : null;
+    }
+    saveState();
+    renderAlarmUI();
+  });
+
+  labelInputEl?.addEventListener("input", () => {
+    alarmState.label = (labelInputEl.value || "").slice(0, 28);
+    saveState();
+  });
+
+  toggleBtnEl.addEventListener("click", async () => {
+    initAudioContext();
+    if (isRinging) dismissClockAlarm();
+
+    if (alarmState.enabled) {
+      alarmState.enabled = false;
+      snoozeTarget = null;
+      skipMinuteKey = null;
+      saveState();
+      renderAlarmUI();
+      return;
+    }
+
+    if (/^\d{2}:\d{2}$/.test(timeInputEl.value)) {
+      alarmState.time = timeInputEl.value;
+    }
+    alarmState.enabled = true;
+    lastTriggeredKey = null;
+    snoozeTarget = null;
+    const parts = getClockParts();
+    skipMinuteKey = parts.hhmm === alarmState.time ? `${parts.dateKey}|${parts.hhmm}|${currentTimezone}` : null;
+    saveState();
+
+    await ensureNotificationPermission();
+    renderAlarmUI();
+  });
+
+  notifyBtnEl?.addEventListener("click", async () => {
+    initAudioContext();
+    const perm = await ensureNotificationPermission();
+    if (perm === "denied") {
+      showInlineNotice(
+        "BROWSER NOTIFICATIONS BLOCKED",
+        "ENABLE NOTIFICATIONS IN BROWSER SITE SETTINGS TO RECEIVE SYSTEM ALERTS"
+      );
+    } else if (perm === "unsupported") {
+      showInlineNotice(
+        "NOTIFICATIONS UNSUPPORTED",
+        "THIS BROWSER DOES NOT SUPPORT THE WEB NOTIFICATION API"
+      );
+    } else if (perm === "granted") {
+      hideInlineNotice();
+    }
+  });
+
+  testBtnEl?.addEventListener("click", async () => {
+    initAudioContext();
+    await ensureNotificationPermission();
+    const parts = getClockParts();
+    triggerClockAlarm({ isTest: true, timeStr: parts.hhmm });
+  });
+
+  dismissBtnEl?.addEventListener("click", () => {
+    initAudioContext();
+    dismissClockAlarm();
+  });
+
+  snoozeBtnEl?.addEventListener("click", () => {
+    initAudioContext();
+    snoozeClockAlarm();
+  });
+
+  hideBtnEl?.addEventListener("click", () => {
+    initAudioContext();
+    setModuleVisible(false, true);
+  });
+
+  headerToggleBtnEl?.addEventListener("click", () => {
+    initAudioContext();
+    setModuleVisible(!isModuleVisible, true);
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) stepClockAlarm(new Date());
+  });
 })();

@@ -1,11 +1,534 @@
 @import "tailwindcss";
 
 /* ============================================================
+   THEME TOKENS
+   - default  : Coyote Tactical (Default)
+   - bw       : Black & White Monochrome
+   - military : Green Military (Olive Drab / NVG)
+   - arctic   : Arctic Cyan (Naval Ops)
+   ============================================================ */
+:root,
+[data-theme="default"] {
+  --tac-bg: #000000;
+  --tac-text: #e5e5e5;
+  --tac-surface: #0c0c0c;
+  --tac-surface-panel: rgba(10, 10, 10, 0.9);
+  --tac-border: #262626;
+  --tac-border-hover: #383838;
+
+  --tac-digit-main: #f5f5f5;
+  --tac-digit-sec: #cccccc;
+  --tac-digit-glow: 0 0 45px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1);
+  --tac-sec-glow: 0 0 35px rgba(255, 255, 255, 0.15);
+  --tac-ampm-text: #e5e5e5;
+  --tac-ampm-border: #333333;
+  --tac-ampm-bg: #111111;
+
+  --tac-tape-bg: #080808;
+  --tac-tape-border: #242424;
+  --tac-tape-cursor: #ffffff;
+  --tac-tape-cursor-glow: 0 0 6px rgba(255, 255, 255, 0.8);
+
+  --tac-pomo1-bg: #4a331e;
+  --tac-pomo1-border: #8c6239;
+  --tac-pomo1-text: #ecd5bc;
+  --tac-pomo1-hover-bg: #634327;
+  --tac-pomo1-hover-text: #ffffff;
+
+  --tac-pomo2-bg: #3b2817;
+  --tac-pomo2-border: #73502d;
+  --tac-pomo2-text: #d4a373;
+  --tac-pomo2-hover-bg: #533921;
+  --tac-pomo2-hover-text: #ffffff;
+
+  --tac-pomo3-bg: #2e1f12;
+  --tac-pomo3-border: #5a3e23;
+  --tac-pomo3-text: #be8e61;
+  --tac-pomo3-hover-bg: #452e1b;
+  --tac-pomo3-hover-text: #ffffff;
+
+  --tac-ctrl-bg: #231911;
+  --tac-ctrl-border: #5c3a21;
+  --tac-ctrl-text: #d4a373;
+  --tac-ctrl-hover-bg: #4a301b;
+  --tac-ctrl-hover-border: #8c6239;
+  --tac-ctrl-hover-text: #ffffff;
+
+  --tac-start-bg: #5c3a21;
+  --tac-start-border: #8c6239;
+  --tac-start-text: #fae8d4;
+  --tac-start-shadow: 0 0 10px rgba(140, 98, 57, 0.3);
+  --tac-start-hover-bg: #794d2c;
+  --tac-start-hover-border: #d4a373;
+  --tac-start-hover-text: #ffffff;
+
+  --tac-comp-bg: #281c13;
+  --tac-comp-border: #6b4728;
+  --tac-comp-text: #d4a373;
+  --tac-comp-hover-bg: #4a301b;
+  --tac-comp-hover-border: #a3704c;
+  --tac-comp-hover-text: #ffffff;
+
+  --tac-whistle-bg: #452d19;
+  --tac-whistle-border: #8c6239;
+  --tac-whistle-text: #fae3cb;
+  --tac-whistle-shadow: 0 0 8px rgba(140, 98, 57, 0.25);
+  --tac-whistle-hover-bg: #613f23;
+  --tac-whistle-hover-border: #d4a373;
+
+  --tac-torch-field-bg: #382415;
+  --tac-torch-field-border: #79512e;
+  --tac-torch-field-text: #d4a373;
+  --tac-torch-field-hover-bg: #52341d;
+  --tac-torch-field-hover-border: #a3704c;
+
+  --tac-strobe-bg: #3a2214;
+  --tac-strobe-border: #7b4c2b;
+  --tac-strobe-text: #d8aa78;
+  --tac-strobe-hover-bg: #55311c;
+  --tac-strobe-hover-border: #a3704c;
+
+  --tac-sos-bg: #522d17;
+  --tac-sos-border: #8c4b24;
+  --tac-sos-text: #f7d5b8;
+  --tac-sos-shadow: 0 0 10px rgba(140, 75, 36, 0.3);
+  --tac-sos-hover-bg: #6e3d20;
+  --tac-sos-hover-border: #d4a373;
+
+  --tac-action-bg: #382416;
+  --tac-action-border: #8c6239;
+  --tac-action-text: #eed6aa;
+  --tac-action-shadow: 0 0 14px rgba(140, 98, 57, 0.25);
+  --tac-action-hover-bg: #5c3a21;
+  --tac-action-hover-border: #d4a373;
+  --tac-action-hover-text: #ffffff;
+
+  --tac-modal-btn-bg: #2b1d12;
+  --tac-modal-btn-border: #6b4728;
+  --tac-modal-btn-text: #d4a373;
+  --tac-modal-btn-hover-bg: #4a301b;
+  --tac-modal-btn-hover-border: #a3704c;
+  --tac-modal-btn-hover-text: #ffffff;
+
+  --tac-pip-bg: #d4a373;
+  --tac-pip-text: #000000;
+  --tac-pip-border: #f0c99a;
+  --tac-pip-shadow: 0 0 10px rgba(212, 163, 115, 0.9);
+  --tac-pulse-c1: rgba(212, 163, 115, 0.7);
+  --tac-pulse-c2: rgba(212, 163, 115, 1);
+  --tac-pulse-c3: rgba(163, 112, 76, 0.8);
+  --tac-scroll-thumb-hover: #8c6239;
+
+  --tac-camo-bg: #12100d;
+  --tac-camo-1: #2d241c;
+  --tac-camo-2: #3f3224;
+  --tac-camo-3: #181c16;
+  --tac-camo-4: #4a3b2c;
+  --tac-camo-5: #1a1612;
+  --tac-camo-grad: linear-gradient(90deg, #12100d 0%, #251e17 25%, #181c16 50%, #30261c 75%, #12100d 100%);
+
+  --tac-bar-bg: #161310;
+  --tac-bar-1: #2f251c;
+  --tac-bar-2: #1e221b;
+  --tac-bar-3: #3d3123;
+  --tac-bar-4: #171512;
+
+  --tac-atmo-filter: none;
+}
+
+/* ---------------- BLACK & WHITE ---------------- */
+[data-theme="bw"] {
+  --tac-bg: #000000;
+  --tac-text: #f5f5f5;
+  --tac-surface: #070707;
+  --tac-surface-panel: rgba(8, 8, 8, 0.94);
+  --tac-border: #3a3a3a;
+  --tac-border-hover: #ffffff;
+
+  --tac-digit-main: #ffffff;
+  --tac-digit-sec: #d4d4d4;
+  --tac-digit-glow: 0 0 38px rgba(255, 255, 255, 0.24), 0 0 12px rgba(255, 255, 255, 0.14);
+  --tac-sec-glow: 0 0 28px rgba(255, 255, 255, 0.18);
+  --tac-ampm-text: #000000;
+  --tac-ampm-border: #ffffff;
+  --tac-ampm-bg: #ffffff;
+
+  --tac-tape-bg: #030303;
+  --tac-tape-border: #404040;
+  --tac-tape-cursor: #ffffff;
+  --tac-tape-cursor-glow: 0 0 8px rgba(255, 255, 255, 0.95);
+
+  --tac-pomo1-bg: #262626;
+  --tac-pomo1-border: #e5e5e5;
+  --tac-pomo1-text: #ffffff;
+  --tac-pomo1-hover-bg: #ffffff;
+  --tac-pomo1-hover-text: #000000;
+
+  --tac-pomo2-bg: #1c1c1c;
+  --tac-pomo2-border: #a3a3a3;
+  --tac-pomo2-text: #f5f5f5;
+  --tac-pomo2-hover-bg: #e5e5e5;
+  --tac-pomo2-hover-text: #000000;
+
+  --tac-pomo3-bg: #121212;
+  --tac-pomo3-border: #737373;
+  --tac-pomo3-text: #d4d4d4;
+  --tac-pomo3-hover-bg: #d4d4d4;
+  --tac-pomo3-hover-text: #000000;
+
+  --tac-ctrl-bg: #121212;
+  --tac-ctrl-border: #525252;
+  --tac-ctrl-text: #f5f5f5;
+  --tac-ctrl-hover-bg: #ffffff;
+  --tac-ctrl-hover-border: #ffffff;
+  --tac-ctrl-hover-text: #000000;
+
+  --tac-start-bg: #ffffff;
+  --tac-start-border: #ffffff;
+  --tac-start-text: #000000;
+  --tac-start-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+  --tac-start-hover-bg: #d4d4d4;
+  --tac-start-hover-border: #ffffff;
+  --tac-start-hover-text: #000000;
+
+  --tac-comp-bg: #141414;
+  --tac-comp-border: #737373;
+  --tac-comp-text: #ffffff;
+  --tac-comp-hover-bg: #ffffff;
+  --tac-comp-hover-border: #ffffff;
+  --tac-comp-hover-text: #000000;
+
+  --tac-whistle-bg: #1f1f1f;
+  --tac-whistle-border: #d4d4d4;
+  --tac-whistle-text: #ffffff;
+  --tac-whistle-shadow: 0 0 8px rgba(255, 255, 255, 0.18);
+  --tac-whistle-hover-bg: #ffffff;
+  --tac-whistle-hover-border: #ffffff;
+
+  --tac-torch-field-bg: #171717;
+  --tac-torch-field-border: #a3a3a3;
+  --tac-torch-field-text: #f5f5f5;
+  --tac-torch-field-hover-bg: #ffffff;
+  --tac-torch-field-hover-border: #ffffff;
+
+  --tac-strobe-bg: #171717;
+  --tac-strobe-border: #a3a3a3;
+  --tac-strobe-text: #f5f5f5;
+  --tac-strobe-hover-bg: #ffffff;
+  --tac-strobe-hover-border: #ffffff;
+
+  --tac-sos-bg: #262626;
+  --tac-sos-border: #ffffff;
+  --tac-sos-text: #ffffff;
+  --tac-sos-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
+  --tac-sos-hover-bg: #ffffff;
+  --tac-sos-hover-border: #ffffff;
+
+  --tac-action-bg: #121212;
+  --tac-action-border: #d4d4d4;
+  --tac-action-text: #ffffff;
+  --tac-action-shadow: 0 0 12px rgba(255, 255, 255, 0.14);
+  --tac-action-hover-bg: #ffffff;
+  --tac-action-hover-border: #ffffff;
+  --tac-action-hover-text: #000000;
+
+  --tac-modal-btn-bg: #171717;
+  --tac-modal-btn-border: #737373;
+  --tac-modal-btn-text: #ffffff;
+  --tac-modal-btn-hover-bg: #ffffff;
+  --tac-modal-btn-hover-border: #ffffff;
+  --tac-modal-btn-hover-text: #000000;
+
+  --tac-pip-bg: #ffffff;
+  --tac-pip-text: #000000;
+  --tac-pip-border: #ffffff;
+  --tac-pip-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+  --tac-pulse-c1: rgba(255, 255, 255, 0.65);
+  --tac-pulse-c2: rgba(255, 255, 255, 1);
+  --tac-pulse-c3: rgba(212, 212, 212, 0.8);
+  --tac-scroll-thumb-hover: #ffffff;
+
+  --tac-camo-bg: #0c0c0c;
+  --tac-camo-1: #262626;
+  --tac-camo-2: #404040;
+  --tac-camo-3: #171717;
+  --tac-camo-4: #595959;
+  --tac-camo-5: #121212;
+  --tac-camo-grad: linear-gradient(90deg, #0a0a0a 0%, #242424 25%, #141414 50%, #2e2e2e 75%, #0a0a0a 100%);
+
+  --tac-bar-bg: #101010;
+  --tac-bar-1: #262626;
+  --tac-bar-2: #1c1c1c;
+  --tac-bar-3: #454545;
+  --tac-bar-4: #121212;
+
+  --tac-atmo-filter: grayscale(1) contrast(1.08);
+}
+
+/* ---------------- GREEN MILITARY ---------------- */
+[data-theme="military"] {
+  --tac-bg: #030704;
+  --tac-text: #dce8d5;
+  --tac-surface: #08110a;
+  --tac-surface-panel: rgba(8, 17, 10, 0.92);
+  --tac-border: #233a25;
+  --tac-border-hover: #4f8048;
+
+  --tac-digit-main: #ecfae5;
+  --tac-digit-sec: #a9cc95;
+  --tac-digit-glow: 0 0 42px rgba(132, 204, 22, 0.24), 0 0 14px rgba(163, 230, 53, 0.14);
+  --tac-sec-glow: 0 0 32px rgba(132, 204, 22, 0.18);
+  --tac-ampm-text: #d9f99d;
+  --tac-ampm-border: #3f6212;
+  --tac-ampm-bg: #0f1d11;
+
+  --tac-tape-bg: #050c06;
+  --tac-tape-border: #213823;
+  --tac-tape-cursor: #bef264;
+  --tac-tape-cursor-glow: 0 0 8px rgba(190, 242, 100, 0.85);
+
+  --tac-pomo1-bg: #293d1f;
+  --tac-pomo1-border: #5c8743;
+  --tac-pomo1-text: #e2f5d6;
+  --tac-pomo1-hover-bg: #3b582c;
+  --tac-pomo1-hover-text: #ffffff;
+
+  --tac-pomo2-bg: #203118;
+  --tac-pomo2-border: #4a6f36;
+  --tac-pomo2-text: #bddc9e;
+  --tac-pomo2-hover-bg: #304923;
+  --tac-pomo2-hover-text: #ffffff;
+
+  --tac-pomo3-bg: #172412;
+  --tac-pomo3-border: #39572a;
+  --tac-pomo3-text: #a1c486;
+  --tac-pomo3-hover-bg: #263b1d;
+  --tac-pomo3-hover-text: #ffffff;
+
+  --tac-ctrl-bg: #132112;
+  --tac-ctrl-border: #3a5c32;
+  --tac-ctrl-text: #b7d69e;
+  --tac-ctrl-hover-bg: #284221;
+  --tac-ctrl-hover-border: #699c4e;
+  --tac-ctrl-hover-text: #ffffff;
+
+  --tac-start-bg: #375724;
+  --tac-start-border: #76ab4f;
+  --tac-start-text: #f0fce8;
+  --tac-start-shadow: 0 0 12px rgba(101, 163, 13, 0.3);
+  --tac-start-hover-bg: #4b7532;
+  --tac-start-hover-border: #a3e635;
+  --tac-start-hover-text: #ffffff;
+
+  --tac-comp-bg: #152414;
+  --tac-comp-border: #416635;
+  --tac-comp-text: #b9d9a0;
+  --tac-comp-hover-bg: #294524;
+  --tac-comp-hover-border: #7cb356;
+  --tac-comp-hover-text: #ffffff;
+
+  --tac-whistle-bg: #24391c;
+  --tac-whistle-border: #5a8742;
+  --tac-whistle-text: #e4f7d7;
+  --tac-whistle-shadow: 0 0 8px rgba(101, 163, 13, 0.25);
+  --tac-whistle-hover-bg: #355229;
+  --tac-whistle-hover-border: #84cc16;
+
+  --tac-torch-field-bg: #1c2e17;
+  --tac-torch-field-border: #4d7539;
+  --tac-torch-field-text: #c2e0a8;
+  --tac-torch-field-hover-bg: #2d4724;
+  --tac-torch-field-hover-border: #7eb556;
+
+  --tac-strobe-bg: #1d2f18;
+  --tac-strobe-border: #4e783a;
+  --tac-strobe-text: #c6e3ad;
+  --tac-strobe-hover-bg: #2f4b26;
+  --tac-strobe-hover-border: #7eb556;
+
+  --tac-sos-bg: #2c451f;
+  --tac-sos-border: #6ea34c;
+  --tac-sos-text: #ecfce0;
+  --tac-sos-shadow: 0 0 10px rgba(132, 204, 22, 0.28);
+  --tac-sos-hover-bg: #3e612c;
+  --tac-sos-hover-border: #a3e635;
+
+  --tac-action-bg: #1a2d17;
+  --tac-action-border: #558042;
+  --tac-action-text: #d4ecc2;
+  --tac-action-shadow: 0 0 14px rgba(85, 128, 66, 0.28);
+  --tac-action-hover-bg: #2f4f28;
+  --tac-action-hover-border: #84cc16;
+  --tac-action-hover-text: #ffffff;
+
+  --tac-modal-btn-bg: #172714;
+  --tac-modal-btn-border: #446936;
+  --tac-modal-btn-text: #bfe0a6;
+  --tac-modal-btn-hover-bg: #2c4924;
+  --tac-modal-btn-hover-border: #7eb556;
+  --tac-modal-btn-hover-text: #ffffff;
+
+  --tac-pip-bg: #a3e635;
+  --tac-pip-text: #041005;
+  --tac-pip-border: #d9f99d;
+  --tac-pip-shadow: 0 0 10px rgba(163, 230, 53, 0.85);
+  --tac-pulse-c1: rgba(163, 230, 53, 0.7);
+  --tac-pulse-c2: rgba(190, 242, 100, 1);
+  --tac-pulse-c3: rgba(101, 163, 13, 0.85);
+  --tac-scroll-thumb-hover: #5c8743;
+
+  --tac-camo-bg: #0e160d;
+  --tac-camo-1: #1f321b;
+  --tac-camo-2: #314b28;
+  --tac-camo-3: #141e13;
+  --tac-camo-4: #415c31;
+  --tac-camo-5: #172215;
+  --tac-camo-grad: linear-gradient(90deg, #0e160d 0%, #1d2e19 25%, #132013 50%, #2a4021 75%, #0e160d 100%);
+
+  --tac-bar-bg: #101a0f;
+  --tac-bar-1: #21361c;
+  --tac-bar-2: #172415;
+  --tac-bar-3: #36502b;
+  --tac-bar-4: #121c11;
+
+  --tac-atmo-filter: sepia(0.32) hue-rotate(68deg) saturate(1.18);
+}
+
+/* ---------------- ARCTIC CYAN ---------------- */
+[data-theme="arctic"] {
+  --tac-bg: #02060b;
+  --tac-text: #e0f2fe;
+  --tac-surface: #07101b;
+  --tac-surface-panel: rgba(7, 16, 27, 0.92);
+  --tac-border: #1b344d;
+  --tac-border-hover: #38bdf8;
+
+  --tac-digit-main: #f0f9ff;
+  --tac-digit-sec: #93c5fd;
+  --tac-digit-glow: 0 0 42px rgba(56, 189, 248, 0.25), 0 0 14px rgba(125, 211, 252, 0.15);
+  --tac-sec-glow: 0 0 32px rgba(56, 189, 248, 0.18);
+  --tac-ampm-text: #bae6fd;
+  --tac-ampm-border: #0369a1;
+  --tac-ampm-bg: #081c2e;
+
+  --tac-tape-bg: #040b14;
+  --tac-tape-border: #18324a;
+  --tac-tape-cursor: #38bdf8;
+  --tac-tape-cursor-glow: 0 0 8px rgba(56, 189, 248, 0.9);
+
+  --tac-pomo1-bg: #0f3352;
+  --tac-pomo1-border: #2c74a8;
+  --tac-pomo1-text: #e0f2fe;
+  --tac-pomo1-hover-bg: #164973;
+  --tac-pomo1-hover-text: #ffffff;
+
+  --tac-pomo2-bg: #0c2942;
+  --tac-pomo2-border: #235d87;
+  --tac-pomo2-text: #bae6fd;
+  --tac-pomo2-hover-bg: #123c61;
+  --tac-pomo2-hover-text: #ffffff;
+
+  --tac-pomo3-bg: #091f33;
+  --tac-pomo3-border: #1a486b;
+  --tac-pomo3-text: #93c5fd;
+  --tac-pomo3-hover-bg: #0e304f;
+  --tac-pomo3-hover-text: #ffffff;
+
+  --tac-ctrl-bg: #091c2e;
+  --tac-ctrl-border: #1e4b70;
+  --tac-ctrl-text: #93d5fa;
+  --tac-ctrl-hover-bg: #123654;
+  --tac-ctrl-hover-border: #38bdf8;
+  --tac-ctrl-hover-text: #ffffff;
+
+  --tac-start-bg: #0c4a6e;
+  --tac-start-border: #38bdf8;
+  --tac-start-text: #f0f9ff;
+  --tac-start-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+  --tac-start-hover-bg: #0369a1;
+  --tac-start-hover-border: #7dd3fc;
+  --tac-start-hover-text: #ffffff;
+
+  --tac-comp-bg: #0a1f33;
+  --tac-comp-border: #235780;
+  --tac-comp-text: #9bd8fb;
+  --tac-comp-hover-bg: #133959;
+  --tac-comp-hover-border: #38bdf8;
+  --tac-comp-hover-text: #ffffff;
+
+  --tac-whistle-bg: #0d2c47;
+  --tac-whistle-border: #2d70a3;
+  --tac-whistle-text: #e0f2fe;
+  --tac-whistle-shadow: 0 0 8px rgba(56, 189, 248, 0.24);
+  --tac-whistle-hover-bg: #14436b;
+  --tac-whistle-hover-border: #38bdf8;
+
+  --tac-torch-field-bg: #0a243b;
+  --tac-torch-field-border: #255e8a;
+  --tac-torch-field-text: #bae6fd;
+  --tac-torch-field-hover-bg: #113a5e;
+  --tac-torch-field-hover-border: #38bdf8;
+
+  --tac-strobe-bg: #0a243b;
+  --tac-strobe-border: #255e8a;
+  --tac-strobe-text: #bae6fd;
+  --tac-strobe-hover-bg: #113a5e;
+  --tac-strobe-hover-border: #38bdf8;
+
+  --tac-sos-bg: #0e3759;
+  --tac-sos-border: #38bdf8;
+  --tac-sos-text: #f0f9ff;
+  --tac-sos-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+  --tac-sos-hover-bg: #154e7d;
+  --tac-sos-hover-border: #7dd3fc;
+
+  --tac-action-bg: #0b2338;
+  --tac-action-border: #276899;
+  --tac-action-text: #ccebfd;
+  --tac-action-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+  --tac-action-hover-bg: #133d61;
+  --tac-action-hover-border: #38bdf8;
+  --tac-action-hover-text: #ffffff;
+
+  --tac-modal-btn-bg: #0a2033;
+  --tac-modal-btn-border: #235982;
+  --tac-modal-btn-text: #a5dcfa;
+  --tac-modal-btn-hover-bg: #133959;
+  --tac-modal-btn-hover-border: #38bdf8;
+  --tac-modal-btn-hover-text: #ffffff;
+
+  --tac-pip-bg: #38bdf8;
+  --tac-pip-text: #020a12;
+  --tac-pip-border: #bae6fd;
+  --tac-pip-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
+  --tac-pulse-c1: rgba(56, 189, 248, 0.7);
+  --tac-pulse-c2: rgba(125, 211, 252, 1);
+  --tac-pulse-c3: rgba(14, 165, 233, 0.85);
+  --tac-scroll-thumb-hover: #38bdf8;
+
+  --tac-camo-bg: #08121d;
+  --tac-camo-1: #13273d;
+  --tac-camo-2: #1d3c5c;
+  --tac-camo-3: #0d1b2b;
+  --tac-camo-4: #2a537a;
+  --tac-camo-5: #0b1624;
+  --tac-camo-grad: linear-gradient(90deg, #08121d 0%, #112438 25%, #0c1a29 50%, #193552 75%, #08121d 100%);
+
+  --tac-bar-bg: #091522;
+  --tac-bar-1: #152b42;
+  --tac-bar-2: #0f2033;
+  --tac-bar-3: #224669;
+  --tac-bar-4: #0b1826;
+
+  --tac-atmo-filter: hue-rotate(175deg) saturate(1.1);
+}
+
+/* ============================================================
    BASE
    ============================================================ */
 html, body {
-  background-color: #000000 !important;
-  color: #e5e5e5;
+  background-color: var(--tac-bg) !important;
+  color: var(--tac-text);
   font-family: 'Plus Jakarta Sans', sans-serif;
   margin: 0;
   padding: 0;
@@ -23,50 +546,89 @@ html, body {
 }
 
 .glow-subtle {
-  text-shadow: 0 0 45px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1);
+  text-shadow: var(--tac-digit-glow);
 }
 
 /* ============================================================
    TACTICAL CAMO PATTERNS
    ============================================================ */
 .camo-strip-pattern {
-  background-color: #12100d;
+  background-color: var(--tac-camo-bg);
   background-image: 
-    radial-gradient(#2d241c 32%, transparent 34%),
-    radial-gradient(#3f3224 36%, transparent 38%),
-    radial-gradient(#181c16 28%, transparent 30%),
-    radial-gradient(#4a3b2c 24%, transparent 26%),
-    radial-gradient(#1a1612 40%, transparent 42%),
-    linear-gradient(90deg, #12100d 0%, #251e17 25%, #181c16 50%, #30261c 75%, #12100d 100%);
+    radial-gradient(var(--tac-camo-1) 32%, transparent 34%),
+    radial-gradient(var(--tac-camo-2) 36%, transparent 38%),
+    radial-gradient(var(--tac-camo-3) 28%, transparent 30%),
+    radial-gradient(var(--tac-camo-4) 24%, transparent 26%),
+    radial-gradient(var(--tac-camo-5) 40%, transparent 42%),
+    var(--tac-camo-grad);
   background-size: 42px 28px, 54px 34px, 60px 32px, 36px 26px, 28px 22px, 100% 100%;
   background-position: 0px 0px, 18px 14px, 36px 8px, 12px 16px, 6px 4px, 0px 0px;
 }
 
 .camo-accent-bar {
-  background-color: #161310;
+  background-color: var(--tac-bar-bg);
   background-image: 
-    radial-gradient(circle at 15% 50%, #2f251c 0%, #2f251c 30%, transparent 32%),
-    radial-gradient(circle at 45% 40%, #1e221b 0%, #1e221b 36%, transparent 38%),
-    radial-gradient(circle at 75% 60%, #3d3123 0%, #3d3123 28%, transparent 30%),
-    radial-gradient(circle at 92% 30%, #171512 0%, #171512 34%, transparent 36%);
+    radial-gradient(circle at 15% 50%, var(--tac-bar-1) 0%, var(--tac-bar-1) 30%, transparent 32%),
+    radial-gradient(circle at 45% 40%, var(--tac-bar-2) 0%, var(--tac-bar-2) 36%, transparent 38%),
+    radial-gradient(circle at 75% 60%, var(--tac-bar-3) 0%, var(--tac-bar-3) 28%, transparent 30%),
+    radial-gradient(circle at 92% 30%, var(--tac-bar-4) 0%, var(--tac-bar-4) 34%, transparent 36%);
   background-size: 60px 18px;
 }
 
 /* ============================================================
-   NEUTRAL MODULES (Chrono, Compass, UTC)
+   MODULES & PANELS (Chrono, Compass, UTC, Header Bars)
    ============================================================ */
+#alarm-module,
 #chrono-module,
 #compass-module,
 #utc-module {
-  background-color: #0c0c0c !important;
-  border: 1px solid #262626 !important;
+  background-color: var(--tac-surface) !important;
+  border: 1px solid var(--tac-border) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.015) !important;
 }
 
+#alarm-module:hover,
 #chrono-module:hover,
 #compass-module:hover,
 #utc-module:hover {
-  border-color: #383838 !important;
+  border-color: var(--tac-border-hover) !important;
+}
+
+#alarm-time-input {
+  color-scheme: dark;
+}
+
+#alarm-module.alarm-ringing {
+  border-color: var(--tac-pip-border) !important;
+  box-shadow: 0 0 18px var(--tac-pulse-c1), inset 0 0 14px rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-alarm-hidden="true"] #alarm-module {
+  display: none !important;
+}
+
+#toggle-alarm-module-btn:hover {
+  border-color: var(--tac-border-hover) !important;
+}
+
+[data-theme="bw"] .tac-panel,
+[data-theme="military"] .tac-panel,
+[data-theme="arctic"] .tac-panel {
+  background-color: var(--tac-surface-panel) !important;
+  border-color: var(--tac-border) !important;
+}
+
+[data-theme="bw"] #open-geo-modal-btn:hover,
+[data-theme="military"] #open-geo-modal-btn:hover,
+[data-theme="arctic"] #open-geo-modal-btn:hover {
+  border-color: var(--tac-border-hover) !important;
+}
+
+[data-theme="bw"] .tac-modal-shell,
+[data-theme="military"] .tac-modal-shell,
+[data-theme="arctic"] .tac-modal-shell {
+  background-color: var(--tac-surface) !important;
+  border-color: var(--tac-border-hover) !important;
 }
 
 /* ============================================================
@@ -74,19 +636,19 @@ html, body {
    ============================================================ */
 #hours,
 #minutes {
-  color: #f5f5f5 !important;
-  text-shadow: 0 0 45px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1) !important;
+  color: var(--tac-digit-main) !important;
+  text-shadow: var(--tac-digit-glow) !important;
 }
 
 #seconds {
-  color: #cccccc !important;
-  text-shadow: 0 0 35px rgba(255, 255, 255, 0.15) !important;
+  color: var(--tac-digit-sec) !important;
+  text-shadow: var(--tac-sec-glow) !important;
 }
 
 #clock-ampm {
-  color: #e5e5e5 !important;
-  border-color: #333333 !important;
-  background-color: #111111 !important;
+  color: var(--tac-ampm-text) !important;
+  border-color: var(--tac-ampm-border) !important;
+  background-color: var(--tac-ampm-bg) !important;
   text-shadow: none !important;
 }
 
@@ -102,80 +664,100 @@ html, body {
   stroke: rgba(255, 255, 255, 0.16) !important;
 }
 
+[data-theme="military"] .compass-dial-ring circle {
+  stroke: rgba(163, 230, 53, 0.24) !important;
+}
+
+[data-theme="military"] #compass-svg polygon:first-of-type {
+  fill: #bef264;
+}
+
+[data-theme="arctic"] .compass-dial-ring circle {
+  stroke: rgba(56, 189, 248, 0.24) !important;
+}
+
+[data-theme="arctic"] #compass-svg polygon:first-of-type {
+  fill: #38bdf8;
+}
+
 .compass-tape-strip {
   transition: transform 0.1s linear;
 }
 
 #compass-tape-container {
-  background-color: #080808 !important;
-  border-color: #242424 !important;
+  background-color: var(--tac-tape-bg) !important;
+  border-color: var(--tac-tape-border) !important;
 }
 
 #compass-tape-container .bg-red-500,
 #compass-tape-container .bg-white {
-  background-color: #ffffff !important;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8) !important;
+  background-color: var(--tac-tape-cursor) !important;
+  box-shadow: var(--tac-tape-cursor-glow) !important;
 }
 
 /* ============================================================
-   TACTICAL BROWN / COYOTE BUTTONS
+   THEMED TACTICAL BUTTONS
    ============================================================ */
 
 /* Medical ICE */
 #open-medical-id-btn {
-  background-color: #382416 !important;
-  border-color: #8c6239 !important;
-  color: #d4a373 !important;
-  box-shadow: 0 0 12px rgba(140, 98, 57, 0.3) !important;
+  background-color: var(--tac-action-bg) !important;
+  border-color: var(--tac-action-border) !important;
+  color: var(--tac-action-text) !important;
+  box-shadow: var(--tac-action-shadow) !important;
 }
 #open-medical-id-btn:hover {
-  background-color: #5c3a21 !important;
-  border-color: #d4a373 !important;
-  color: #ffffff !important;
+  background-color: var(--tac-action-hover-bg) !important;
+  border-color: var(--tac-action-hover-border) !important;
+  color: var(--tac-action-hover-text) !important;
 }
 
 /* Pomodoro buttons */
 [data-pomo="1500"] {
-  background-color: #4a331e !important;
-  border: 1px solid #8c6239 !important;
-  color: #ecd5bc !important;
+  background-color: var(--tac-pomo1-bg) !important;
+  border: 1px solid var(--tac-pomo1-border) !important;
+  color: var(--tac-pomo1-text) !important;
 }
 [data-pomo="1500"]:hover {
-  background-color: #634327 !important;
-  color: #ffffff !important;
+  background-color: var(--tac-pomo1-hover-bg) !important;
+  color: var(--tac-pomo1-hover-text) !important;
 }
 
 [data-pomo="300"] {
-  background-color: #3b2817 !important;
-  border: 1px solid #73502d !important;
-  color: #d4a373 !important;
+  background-color: var(--tac-pomo2-bg) !important;
+  border: 1px solid var(--tac-pomo2-border) !important;
+  color: var(--tac-pomo2-text) !important;
 }
 [data-pomo="300"]:hover {
-  background-color: #533921 !important;
-  color: #ffffff !important;
+  background-color: var(--tac-pomo2-hover-bg) !important;
+  color: var(--tac-pomo2-hover-text) !important;
 }
 
 [data-pomo="900"] {
-  background-color: #2e1f12 !important;
-  border: 1px solid #5a3e23 !important;
-  color: #be8e61 !important;
+  background-color: var(--tac-pomo3-bg) !important;
+  border: 1px solid var(--tac-pomo3-border) !important;
+  color: var(--tac-pomo3-text) !important;
 }
 [data-pomo="900"]:hover {
-  background-color: #452e1b !important;
-  color: #ffffff !important;
+  background-color: var(--tac-pomo3-hover-bg) !important;
+  color: var(--tac-pomo3-hover-text) !important;
 }
 
-/* Timer controls */
+/* Timer controls & secondary alarm buttons */
 #btn-sub-min,
 #btn-add-min,
 #btn-add-5m,
 #btn-add-10m,
 [data-preset],
 #btn-clear-timer,
-#chrono-reset-btn {
-  background-color: #231911 !important;
-  border-color: #5c3a21 !important;
-  color: #d4a373 !important;
+#chrono-reset-btn,
+#alarm-notify-btn,
+#alarm-test-btn,
+#alarm-snooze-btn,
+#alarm-hide-btn {
+  background-color: var(--tac-ctrl-bg) !important;
+  border-color: var(--tac-ctrl-border) !important;
+  color: var(--tac-ctrl-text) !important;
 }
 #btn-sub-min:hover,
 #btn-add-min:hover,
@@ -183,105 +765,132 @@ html, body {
 #btn-add-10m:hover,
 [data-preset]:hover,
 #btn-clear-timer:hover,
-#chrono-reset-btn:hover {
-  background-color: #4a301b !important;
-  border-color: #8c6239 !important;
-  color: #ffffff !important;
+#chrono-reset-btn:hover,
+#alarm-notify-btn:hover,
+#alarm-test-btn:hover,
+#alarm-snooze-btn:hover,
+#alarm-hide-btn:hover {
+  background-color: var(--tac-ctrl-hover-bg) !important;
+  border-color: var(--tac-ctrl-hover-border) !important;
+  color: var(--tac-ctrl-hover-text) !important;
 }
 
-/* START button */
-#timer-toggle-btn {
-  background-color: #5c3a21 !important;
-  border-color: #8c6239 !important;
-  color: #fae8d4 !important;
-  box-shadow: 0 0 10px rgba(140, 98, 57, 0.3) !important;
+/* START & Alarm Primary buttons */
+#timer-toggle-btn,
+#alarm-toggle-btn,
+#alarm-dismiss-btn {
+  background-color: var(--tac-start-bg) !important;
+  border-color: var(--tac-start-border) !important;
+  color: var(--tac-start-text) !important;
+  box-shadow: var(--tac-start-shadow) !important;
 }
-#timer-toggle-btn:hover {
-  background-color: #794d2c !important;
-  border-color: #d4a373 !important;
-  color: #ffffff !important;
+#timer-toggle-btn:hover,
+#alarm-toggle-btn:hover,
+#alarm-dismiss-btn:hover {
+  background-color: var(--tac-start-hover-bg) !important;
+  border-color: var(--tac-start-hover-border) !important;
+  color: var(--tac-start-hover-text) !important;
+}
+
+#alarm-toggle-btn[data-armed="true"] {
+  background-color: var(--tac-action-bg) !important;
+  border-color: var(--tac-pip-border) !important;
+  color: var(--tac-action-text) !important;
 }
 
 /* Compass buttons */
 #compass-mode-btn,
+#compass-device-btn,
 #compass-lock-btn,
 #btn-recalibrate-compass {
-  background-color: #281c13 !important;
-  border: 1px solid #6b4728 !important;
-  color: #d4a373 !important;
+  background-color: var(--tac-comp-bg) !important;
+  border: 1px solid var(--tac-comp-border) !important;
+  color: var(--tac-comp-text) !important;
 }
 #compass-mode-btn:hover,
+#compass-device-btn:hover,
 #compass-lock-btn:hover,
 #btn-recalibrate-compass:hover {
-  background-color: #4a301b !important;
-  border-color: #a3704c !important;
-  color: #ffffff !important;
+  background-color: var(--tac-comp-hover-bg) !important;
+  border-color: var(--tac-comp-hover-border) !important;
+  color: var(--tac-comp-hover-text) !important;
 }
 
 /* Emergency beacons */
 #whistle-toggle-btn {
-  background-color: #452d19 !important;
-  border-color: #8c6239 !important;
-  color: #fae3cb !important;
-  box-shadow: 0 0 8px rgba(140, 98, 57, 0.25) !important;
+  background-color: var(--tac-whistle-bg) !important;
+  border-color: var(--tac-whistle-border) !important;
+  color: var(--tac-whistle-text) !important;
+  box-shadow: var(--tac-whistle-shadow) !important;
 }
 #whistle-toggle-btn:hover {
-  background-color: #613f23 !important;
-  border-color: #d4a373 !important;
+  background-color: var(--tac-whistle-hover-bg) !important;
+  border-color: var(--tac-whistle-hover-border) !important;
 }
 
 #torch-field-btn {
-  background-color: #382415 !important;
-  border-color: #79512e !important;
-  color: #d4a373 !important;
+  background-color: var(--tac-torch-field-bg) !important;
+  border-color: var(--tac-torch-field-border) !important;
+  color: var(--tac-torch-field-text) !important;
 }
 #torch-field-btn:hover {
-  background-color: #52341d !important;
-  border-color: #a3704c !important;
-  color: #ffffff !important;
+  background-color: var(--tac-torch-field-hover-bg) !important;
+  border-color: var(--tac-torch-field-hover-border) !important;
+  color: var(--tac-comp-hover-text) !important;
 }
 
 #torch-toggle {
-  background-color: #3a2214 !important;
-  border-color: #7b4c2b !important;
-  color: #d8aa78 !important;
+  background-color: var(--tac-strobe-bg) !important;
+  border-color: var(--tac-strobe-border) !important;
+  color: var(--tac-strobe-text) !important;
 }
 #torch-toggle:hover {
-  background-color: #55311c !important;
-  border-color: #a3704c !important;
-  color: #ffffff !important;
+  background-color: var(--tac-strobe-hover-bg) !important;
+  border-color: var(--tac-strobe-hover-border) !important;
+  color: var(--tac-comp-hover-text) !important;
 }
 
 #sos-toggle-btn {
-  background-color: #522d17 !important;
-  border-color: #8c4b24 !important;
-  color: #f7d5b8 !important;
-  box-shadow: 0 0 10px rgba(140, 75, 36, 0.3) !important;
+  background-color: var(--tac-sos-bg) !important;
+  border-color: var(--tac-sos-border) !important;
+  color: var(--tac-sos-text) !important;
+  box-shadow: var(--tac-sos-shadow) !important;
 }
 #sos-toggle-btn:hover {
-  background-color: #6e3d20 !important;
-  border-color: #d4a373 !important;
+  background-color: var(--tac-sos-hover-bg) !important;
+  border-color: var(--tac-sos-hover-border) !important;
+}
+
+[data-theme="bw"] #whistle-toggle-btn:hover,
+[data-theme="bw"] #torch-field-btn:hover,
+[data-theme="bw"] #torch-toggle:hover,
+[data-theme="bw"] #sos-toggle-btn:hover {
+  color: #000000 !important;
 }
 
 /* Bottom action buttons */
 #open-map-modal-btn,
 #open-survival-modal-btn {
-  background-color: #382416 !important;
-  border-color: #8c6239 !important;
-  color: #eed6aa !important;
-  box-shadow: 0 0 14px rgba(140, 98, 57, 0.25) !important;
+  background-color: var(--tac-action-bg) !important;
+  border-color: var(--tac-action-border) !important;
+  color: var(--tac-action-text) !important;
+  box-shadow: var(--tac-action-shadow) !important;
 }
 #open-map-modal-btn:hover,
 #open-survival-modal-btn:hover {
-  background-color: #5c3a21 !important;
-  border-color: #d4a373 !important;
-  color: #ffffff !important;
+  background-color: var(--tac-action-hover-bg) !important;
+  border-color: var(--tac-action-hover-border) !important;
+  color: var(--tac-action-hover-text) !important;
 }
 
 /* Modal buttons */
 #close-survival-modal-btn,
 #close-map-modal-btn,
 #close-medical-id-btn,
+#close-geo-modal-btn,
+#close-notes-btn,
+#notes-clear-btn,
+#notes-save-btn,
 #map-recenter-btn,
 #map-waypoint-btn,
 #map-cache-btn,
@@ -291,32 +900,101 @@ html, body {
 #med-reset-defaults-btn,
 #med-save-data-btn,
 #silence-alarm-btn {
-  background-color: #2b1d12 !important;
-  border-color: #6b4728 !important;
-  color: #d4a373 !important;
+  background-color: var(--tac-modal-btn-bg) !important;
+  border-color: var(--tac-modal-btn-border) !important;
+  color: var(--tac-modal-btn-text) !important;
 }
 #close-survival-modal-btn:hover,
 #close-map-modal-btn:hover,
 #close-medical-id-btn:hover,
+#close-geo-modal-btn:hover,
+#close-notes-btn:hover,
+#notes-clear-btn:hover,
+#notes-save-btn:hover,
 #map-recenter-btn:hover,
 #map-waypoint-btn:hover,
 #map-cache-btn:hover,
+#open-notes-btn:hover,
+#map-city-btn:hover,
 #map-copy-coords-btn:hover,
 #med-reset-defaults-btn:hover,
 #med-save-data-btn:hover,
 #silence-alarm-btn:hover {
-  background-color: #4a301b !important;
-  border-color: #a3704c !important;
+  background-color: var(--tac-modal-btn-hover-bg) !important;
+  border-color: var(--tac-modal-btn-hover-border) !important;
+  color: var(--tac-modal-btn-hover-text) !important;
+}
+
+/* Theme-specific micro-badge & dot harmonization for non-default themes */
+[data-theme="bw"] #whistle-dot,
+[data-theme="bw"] #torch-field-dot,
+[data-theme="bw"] #torch-dot,
+[data-theme="bw"] #sos-beacon-dot,
+[data-theme="bw"] #phase-pulse-dot {
+  background-color: #ffffff !important;
+}
+[data-theme="bw"] #phase-icon,
+[data-theme="bw"] #sos-active-status {
   color: #ffffff !important;
 }
+[data-theme="bw"] .tac-badge-tag {
+  background-color: #000000 !important;
+  border-color: #737373 !important;
+  color: #ffffff !important;
+}
+[data-theme="bw"] #open-medical-id-btn:hover .tac-badge-tag,
+[data-theme="bw"] #open-map-modal-btn:hover .tac-badge-tag,
+[data-theme="bw"] #open-survival-modal-btn:hover .tac-badge-tag,
+[data-theme="bw"] #open-notes-btn:hover .tac-badge-tag {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+}
+[data-theme="bw"] #open-medical-id-btn:hover > span:first-child,
+[data-theme="bw"] #open-map-modal-btn:hover > span:first-child,
+[data-theme="bw"] #open-survival-modal-btn:hover > span:first-child,
+[data-theme="bw"] #open-notes-btn:hover > span:first-child {
+  background-color: #000000 !important;
+}
+
+[data-theme="military"] #whistle-dot,
+[data-theme="military"] #torch-field-dot,
+[data-theme="military"] #torch-dot,
+[data-theme="military"] #sos-beacon-dot {
+  background-color: #bef264 !important;
+}
+[data-theme="military"] #sos-active-status {
+  color: #bef264 !important;
+}
+[data-theme="military"] .tac-badge-tag {
+  background-color: rgba(4, 15, 6, 0.7) !important;
+  border-color: rgba(132, 204, 22, 0.45) !important;
+  color: #d9f99d !important;
+}
+
+[data-theme="arctic"] #whistle-dot,
+[data-theme="arctic"] #torch-field-dot,
+[data-theme="arctic"] #torch-dot,
+[data-theme="arctic"] #sos-beacon-dot {
+  background-color: #7dd3fc !important;
+}
+[data-theme="arctic"] #sos-active-status {
+  color: #7dd3fc !important;
+}
+[data-theme="arctic"] .tac-badge-tag {
+  background-color: rgba(2, 12, 24, 0.7) !important;
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  color: #bae6fd !important;
+}
+
 /* ============================================================
    MORSE PIP + WHISTLE PULSE
    ============================================================ */
 .morse-pip.lit {
-  background-color: #d4a373 !important;
-  color: #000000 !important;
-  border-color: #f0c99a !important;
-  box-shadow: 0 0 10px rgba(212, 163, 115, 0.9);
+  background-color: var(--tac-pip-bg) !important;
+  color: var(--tac-pip-text) !important;
+  border-color: var(--tac-pip-border) !important;
+  box-shadow: var(--tac-pip-shadow);
 }
 
 .whistle-active-pulse {
@@ -325,10 +1003,10 @@ html, body {
 
 @keyframes whistlePulse {
   0% {
-    box-shadow: 0 0 8px rgba(212, 163, 115, 0.7), inset 0 0 4px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 8px var(--tac-pulse-c1), inset 0 0 4px rgba(255, 255, 255, 0.4);
   }
   100% {
-    box-shadow: 0 0 20px rgba(212, 163, 115, 1), 0 0 35px rgba(163, 112, 76, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 20px var(--tac-pulse-c2), 0 0 35px var(--tac-pulse-c3), inset 0 0 8px rgba(255, 255, 255, 0.8);
   }
 }
 
@@ -345,11 +1023,11 @@ html, body {
   background: #262626;
 }
 .tactical-scroll::-webkit-scrollbar-thumb:hover {
-  background: #8c6239;
+  background: var(--tac-scroll-thumb-hover);
 }
 
 /* ============================================================
-   ATMOSPHERIC CYCLE LAYERS (se mantienen)
+   ATMOSPHERIC CYCLE LAYERS
    ============================================================ */
 .cycle-layer {
   position: absolute;
@@ -359,6 +1037,7 @@ html, body {
   opacity: 0;
   transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  filter: var(--tac-atmo-filter);
 }
 .cycle-layer.active {
   opacity: 1;

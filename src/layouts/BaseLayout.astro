@@ -64,6 +64,18 @@ const structuredData = {
     <meta name="theme-color" content="#000000" />
     <meta name="color-scheme" content="dark" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <script is:inline>
+      try {
+        var t = localStorage.getItem("tactical-watch-theme");
+        var valid = t === "default" || t === "bw" || t === "military" || t === "arctic" ? t : "default";
+        document.documentElement.setAttribute("data-theme", valid);
+        var av = localStorage.getItem("tactical-watch-alarm-visible");
+        document.documentElement.setAttribute("data-alarm-hidden", av === "false" ? "true" : "false");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "default");
+        document.documentElement.setAttribute("data-alarm-hidden", "false");
+      }
+    </script>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

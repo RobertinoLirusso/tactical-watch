@@ -9,7 +9,7 @@
     <button
       type="button"
       id="open-geo-modal-btn"
-      class="max-w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-3.5 py-1.5 shadow-md cursor-pointer hover:border-neutral-600 transition-colors text-left"
+      class="tac-panel max-w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-3.5 py-1.5 shadow-md cursor-pointer hover:border-neutral-600 transition-colors text-left"
       title="Open detailed coordinates"
     >
       <span class="flex items-center gap-1.5 text-neutral-200 font-semibold">
@@ -23,7 +23,7 @@
     </button>
 
     <!-- Weather Telemetry -->
-    <div class="max-w-full flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-300 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-4 py-1.5 shadow-md">
+    <div class="tac-panel max-w-full flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-300 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-4 py-1.5 shadow-md">
       <div class="flex items-center gap-1.5">
         <span class="material-symbols-outlined text-neutral-400 text-[14px]" id="weather-icon">cloud</span>
         <span class="text-sm font-semibold text-white tracking-tight" id="weather-temp">13°C</span>
@@ -44,37 +44,75 @@
       <span class="sr-only" id="weather-status" role="status" aria-live="polite">Loading live weather data</span>
     </div>
 
-    <!-- Timezone Selector -->
-    <div class="max-w-full inline-flex items-center gap-3 px-3 sm:px-3.5 py-1.5 bg-neutral-950/90 border border-neutral-800 shadow-md">
-      <div class="flex items-center gap-2 pl-1">
-        <span class="text-[10px] tracking-widest uppercase font-mono-numbers text-neutral-400 font-medium select-none">ZONE</span>
+    <!-- Timezone & Theme Selectors -->
+    <div class="max-w-full flex flex-wrap items-center justify-center gap-2">
+      <!-- Timezone Selector -->
+      <div class="tac-panel max-w-full inline-flex items-center gap-3 px-3 sm:px-3.5 py-1.5 bg-neutral-950/90 border border-neutral-800 shadow-md">
+        <div class="flex items-center gap-2 pl-1">
+          <span class="text-[10px] tracking-widest uppercase font-mono-numbers text-neutral-400 font-medium select-none">ZONE</span>
+          <div class="relative min-w-0 flex items-center border border-neutral-700 bg-black/60 px-2 py-0.5">
+            <select
+              class="bg-transparent text-xs font-light tracking-wider text-white focus:outline-none cursor-pointer appearance-none pr-5 py-1 sm:py-0.5 max-w-[60vw] sm:max-w-none"
+              id="timezone-select"
+              style="appearance: none;"
+            >
+              <option class="bg-neutral-950 text-white font-semibold" selected value="LOCAL_AUTO">LOCAL / AUTO (SYSTEM)</option>
+              <option class="bg-neutral-950 text-white" value="Europe/London">London (GMT/BST)</option>
+              <option class="bg-neutral-950 text-white" value="Europe/Madrid">Madrid (CEST/CET)</option>
+              <option class="bg-neutral-950 text-white" value="America/New_York">New York (EDT/EST)</option>
+              <option class="bg-neutral-950 text-white" value="America/Argentina/Buenos_Aires">Buenos Aires (ART)</option>
+              <option class="bg-neutral-950 text-white" value="America/Mexico_City">Mexico City (CST)</option>
+              <option class="bg-neutral-950 text-white" value="America/Bogota">Bogota (COT)</option>
+              <option class="bg-neutral-950 text-white" value="America/Santiago">Santiago (CLT)</option>
+              <option class="bg-neutral-950 text-white" value="Asia/Tokyo">Tokyo (JST)</option>
+              <option class="bg-neutral-950 text-white" value="Asia/Dubai">Dubai (GST)</option>
+              <option class="bg-neutral-950 text-white" value="Australia/Sydney">Sydney (AEST)</option>
+            </select>
+            <svg class="w-3 h-3 text-neutral-400 pointer-events-none absolute right-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theme Selector -->
+      <div class="tac-panel max-w-full inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 bg-neutral-950/90 border border-neutral-800 shadow-md">
+        <span class="w-2 h-2 shrink-0 border border-white/25" id="theme-swatch" style="background-color: #d4a373;" aria-hidden="true"></span>
+        <span class="text-[10px] tracking-widest uppercase font-mono-numbers text-neutral-400 font-medium select-none">THEME</span>
         <div class="relative min-w-0 flex items-center border border-neutral-700 bg-black/60 px-2 py-0.5">
           <select
-            class="bg-transparent text-xs font-light tracking-wider text-white focus:outline-none cursor-pointer appearance-none pr-5 py-1 sm:py-0.5 max-w-[60vw] sm:max-w-none"
-            id="timezone-select"
+            class="bg-transparent text-xs font-light tracking-wider text-white focus:outline-none cursor-pointer appearance-none pr-5 py-1 sm:py-0.5"
+            id="theme-select"
+            aria-label="Select visual theme"
             style="appearance: none;"
           >
-            <option class="bg-neutral-950 text-white font-semibold" selected value="LOCAL_AUTO">LOCAL / AUTO (SYSTEM)</option>
-            <option class="bg-neutral-950 text-white" value="Europe/London">London (GMT/BST)</option>
-            <option class="bg-neutral-950 text-white" value="Europe/Madrid">Madrid (CEST/CET)</option>
-            <option class="bg-neutral-950 text-white" value="America/New_York">New York (EDT/EST)</option>
-            <option class="bg-neutral-950 text-white" value="America/Argentina/Buenos_Aires">Buenos Aires (ART)</option>
-            <option class="bg-neutral-950 text-white" value="America/Mexico_City">Mexico City (CST)</option>
-            <option class="bg-neutral-950 text-white" value="America/Bogota">Bogota (COT)</option>
-            <option class="bg-neutral-950 text-white" value="America/Santiago">Santiago (CLT)</option>
-            <option class="bg-neutral-950 text-white" value="Asia/Tokyo">Tokyo (JST)</option>
-            <option class="bg-neutral-950 text-white" value="Asia/Dubai">Dubai (GST)</option>
-            <option class="bg-neutral-950 text-white" value="Australia/Sydney">Sydney (AEST)</option>
+            <option class="bg-neutral-950 text-white font-semibold" value="default">Coyote (Default)</option>
+            <option class="bg-neutral-950 text-white" value="bw">Black &amp; White</option>
+            <option class="bg-neutral-950 text-white" value="military">Green Military</option>
+            <option class="bg-neutral-950 text-white" value="arctic">Arctic Cyan</option>
           </select>
           <svg class="w-3 h-3 text-neutral-400 pointer-events-none absolute right-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
         </div>
       </div>
+
+      <!-- Alarm Module Toggle -->
+      <button
+        type="button"
+        id="toggle-alarm-module-btn"
+        aria-controls="alarm-module"
+        aria-expanded="true"
+        class="tac-panel inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-950/90 border border-neutral-800 shadow-md text-[10px] font-mono-numbers tracking-widest uppercase text-neutral-300 hover:border-neutral-600 cursor-pointer whitespace-nowrap transition-colors"
+        title="Show or hide Digital Alarm module"
+      >
+        <span class="material-symbols-outlined text-[13px]" id="toggle-alarm-module-icon">alarm</span>
+        <span id="toggle-alarm-module-label">HIDE ALARM</span>
+      </button>
     </div>
 
     <!-- Barometer & Heading -->
-    <div class="max-w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-3.5 py-1.5 shadow-md">
+    <div class="tac-panel max-w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] font-mono-numbers tracking-wider sm:tracking-widest text-neutral-400 bg-neutral-950/90 border border-neutral-800 px-3 sm:px-3.5 py-1.5 shadow-md">
       <span class="flex items-center gap-1 text-neutral-300 font-medium">
         <span class="material-symbols-outlined text-[13px]">speed</span>
         <span id="geo-baro">1014 hPa</span>
@@ -91,13 +129,13 @@
 
  <!-- Day Phase + Sun times -->
   <div class="pt-0.5 flex items-center justify-center gap-2 flex-wrap">
-    <div class="inline-flex items-center gap-2 px-3 py-0.5 bg-neutral-950/90 border border-neutral-800 text-[11px] font-mono-numbers tracking-widest shadow-md">
+    <div class="tac-panel inline-flex items-center gap-2 px-3 py-0.5 bg-neutral-950/90 border border-neutral-800 text-[11px] font-mono-numbers tracking-widest shadow-md">
       <span class="w-1.5 h-1.5 bg-neutral-400 animate-pulse" id="phase-pulse-dot"></span>
       <span class="material-symbols-outlined text-[13px] text-neutral-300" id="phase-icon">dark_mode</span>
       <span class="font-medium text-neutral-300 tracking-wider text-[10px] uppercase" id="phase-name">NIGHT</span>
     </div>
 
-    <div class="inline-flex items-center gap-2 px-3 py-0.5 bg-neutral-950/90 border border-neutral-800 text-[10px] font-mono-numbers tracking-widest shadow-md text-neutral-400">
+    <div class="tac-panel inline-flex items-center gap-2 px-3 py-0.5 bg-neutral-950/90 border border-neutral-800 text-[10px] font-mono-numbers tracking-widest shadow-md text-neutral-400">
       <span class="flex items-center gap-1">
         <span class="material-symbols-outlined text-[13px] text-amber-500/90">wb_twilight</span>
         <span class="text-neutral-500 uppercase">SR</span>

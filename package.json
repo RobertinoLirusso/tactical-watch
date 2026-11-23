@@ -6,14 +6,16 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --host 0.0.0.0 --port 3000",
+    "start": "HOST=0.0.0.0 PORT=3000 node ./dist/server/entry.mjs",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "astro preview --host 0.0.0.0 --port 3000",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.14",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.4.0",
+    "astro": "7.4.1",
     "leaflet": "^1.9.4",
     "leaflet.offline": "^3.2.1",
     "tailwindcss": "^4.3.3"

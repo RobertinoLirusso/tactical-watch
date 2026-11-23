@@ -2,8 +2,115 @@
 // Telemetry.astro - Tactical Expedition modules (Stitch design)
 ---
 
-<!-- Survival Telemetry Instrument Strip: 3 Tactical Modules -->
+<!-- Survival Telemetry Instrument Strip: Alarm + 3 Tactical Modules -->
 <div class="mt-2 w-full max-w-6xl flex flex-col items-center gap-3 px-0 sm:px-2">
+  <!-- 0. DIGITAL ALARM CLOCK BAR -->
+  <section
+    aria-label="Digital Alarm Clock"
+    class="w-full p-3 flex flex-col gap-2 transition-all relative overflow-hidden text-xs font-mono-numbers"
+    id="alarm-module"
+  >
+    <div class="absolute top-0 left-0 right-0 h-1 camo-accent-bar opacity-70"></div>
+
+    <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+      <div class="flex flex-wrap items-center gap-2 text-[10px] tracking-widest uppercase">
+        <span class="flex items-center gap-1.5 text-neutral-200 font-semibold">
+          <span class="material-symbols-outlined text-[14px]" id="alarm-icon">alarm</span>
+          <span>DIGITAL ALARM</span>
+        </span>
+        <span class="px-1.5 py-0.5 border border-neutral-700 bg-neutral-900 text-[9px] font-semibold tracking-wider text-neutral-400" id="alarm-status-badge" role="status" aria-live="polite">
+          OFF
+        </span>
+        <span class="text-[9px] text-neutral-400 hidden sm:inline" id="alarm-countdown"></span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <label class="flex items-center gap-1.5 text-[9px] text-neutral-400 uppercase tracking-wider">
+          <span>TIME</span>
+          <input
+            type="time"
+            id="alarm-time-input"
+            value="07:00"
+            aria-label="Alarm time"
+            class="bg-black border border-neutral-700 px-2 py-1 sm:py-0.5 text-xs font-mono-numbers font-semibold text-white focus:outline-none focus:border-neutral-400 cursor-pointer"
+          />
+        </label>
+
+        <input
+          type="text"
+          id="alarm-label-input"
+          maxlength="28"
+          placeholder="Label (optional)"
+          aria-label="Alarm label"
+          class="w-32 sm:w-40 bg-black border border-neutral-700 px-2 py-1 sm:py-0.5 text-[10px] font-mono-numbers text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-400"
+        />
+
+        <button
+          type="button"
+          id="alarm-toggle-btn"
+          class="px-3 py-1 sm:py-0.5 border text-[9px] font-semibold tracking-wider uppercase flex items-center gap-1 cursor-pointer whitespace-nowrap transition-all"
+        >
+          <span class="material-symbols-outlined text-[12px]" id="alarm-toggle-icon">alarm_on</span>
+          <span id="alarm-toggle-label">SET ALARM</span>
+        </button>
+
+        <button
+          type="button"
+          id="alarm-notify-btn"
+          class="px-2.5 py-1 sm:py-0.5 border text-[9px] font-semibold tracking-wider uppercase flex items-center gap-1 cursor-pointer whitespace-nowrap transition-all"
+          title="Request browser notification permission"
+        >
+          <span class="material-symbols-outlined text-[12px]">notifications</span>
+          <span id="alarm-notify-label">ENABLE NOTIFY</span>
+        </button>
+
+        <button
+          type="button"
+          id="alarm-test-btn"
+          class="px-2 py-1 sm:py-0.5 border text-[9px] font-semibold tracking-wider uppercase cursor-pointer whitespace-nowrap transition-all"
+          title="Trigger a test alarm notification"
+        >
+          TEST
+        </button>
+
+        <button
+          type="button"
+          id="alarm-snooze-btn"
+          class="hidden px-2.5 py-1 sm:py-0.5 border text-[9px] font-semibold tracking-wider uppercase cursor-pointer whitespace-nowrap transition-all"
+        >
+          SNOOZE 5M
+        </button>
+
+        <button
+          type="button"
+          id="alarm-dismiss-btn"
+          class="hidden px-3 py-1 sm:py-0.5 border text-[9px] font-bold tracking-wider uppercase cursor-pointer whitespace-nowrap transition-all"
+        >
+          DISMISS
+        </button>
+
+        <button
+          type="button"
+          id="alarm-hide-btn"
+          class="px-2 py-1 sm:py-0.5 border text-[9px] font-semibold tracking-wider uppercase flex items-center gap-1 cursor-pointer whitespace-nowrap transition-all"
+          title="Hide alarm module"
+          aria-label="Hide alarm module"
+        >
+          <span class="material-symbols-outlined text-[12px]">visibility_off</span>
+          <span class="hidden sm:inline">HIDE</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hidden pt-1.5 border-t border-neutral-800 flex-wrap items-center justify-between gap-2 text-[10px]" id="alarm-alert-banner" role="alert">
+      <div class="flex items-center gap-2 font-semibold tracking-wider uppercase">
+        <span class="material-symbols-outlined text-[15px]">notifications_active</span>
+        <span id="alarm-alert-message">ALARM ACTIVE</span>
+      </div>
+      <span class="text-[9px] text-neutral-400" id="alarm-alert-meta"></span>
+    </div>
+  </section>
+
   <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono-numbers">
 
     <!-- 1. TACTICAL CHRONO MODULE -->

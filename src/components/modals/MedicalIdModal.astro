@@ -2,162 +2,156 @@
 // MedicalIdModal.astro
 ---
 
-<div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" id="medical-id-modal">
-  <div class="relative w-full max-w-4xl max-h-[92dvh] bg-[#0c0c0c] border border-neutral-700 flex flex-col shadow-2xl overflow-hidden text-neutral-200 font-mono-numbers">
+<div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-2 sm:p-4" id="medical-id-modal">
+  <div class="relative w-full max-w-4xl max-h-[92dvh] bg-[#0c0c0c] border border-neutral-700 shadow-2xl flex flex-col overflow-hidden text-neutral-200 font-mono-numbers">
     
-    <!-- Camo header -->
-    <div class="h-2 camo-strip-pattern border-b border-neutral-800"></div>
+    <!-- Military Camo Top Strip -->
+    <div class="h-2 camo-strip-pattern border-b border-neutral-800 shrink-0"></div>
 
     <!-- Header -->
-    <div class="modal-header px-3 sm:px-5 py-3.5 border-b border-neutral-800 flex items-center justify-between gap-3 bg-[#111111]">
-      <div class="flex items-center gap-2.5">
-        <span class="w-2 h-2 bg-neutral-300 animate-pulse"></span>
-        <span class="material-symbols-outlined text-neutral-300 text-lg">health_and_safety</span>
-        <div>
-          <h3 class="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-white">
-            [ PERSONAL EMERGENCY DATA // OPERATOR MEDICAL ID ]
-          </h3>
-          <p class="text-[9px] text-neutral-400 tracking-wider">
-            I.C.E. IN CASE OF EMERGENCY · REGISTRO MÉDICO ESTRICTAMENTE PERSONAL
-          </p>
-        </div>
+    <div class="px-4 py-3 border-b border-neutral-800 flex items-center justify-between gap-2 bg-[#111111]">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-red-400 text-[18px]">health_and_safety</span>
+        <h3 class="text-xs sm:text-sm font-bold tracking-widest uppercase text-white">
+          [ PERSONAL EMERGENCY DATA // OPERATOR MEDICAL ID ]
+        </h3>
       </div>
-      <button class="px-2.5 py-1 text-xs uppercase transition-colors flex items-center gap-1 cursor-pointer" id="close-medical-id-btn">
+      <button type="button" class="px-2.5 py-1 bg-neutral-900 border border-neutral-700 hover:border-white text-xs uppercase transition-colors flex items-center gap-1 cursor-pointer" id="close-medical-id-btn">
         <span class="material-symbols-outlined text-[14px]">close</span>
-        <span>CLOSE</span>
+        CLOSE
       </button>
     </div>
 
     <!-- Status bar -->
-    <div class="px-3 sm:px-5 py-2 bg-black border-b border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-[10px]">
+    <div class="px-4 py-2 bg-black border-b border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-[10px]">
       <div class="flex flex-wrap items-center gap-2">
-        <span class="text-neutral-400">STATUS:</span>
-        <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-200 font-semibold">I.C.E. PERSONAL DIRECTIVE</span>
-        <span class="px-1.5 py-0.5 bg-neutral-900 border border-neutral-800 text-neutral-400">NO EXTERNAL CONTACTS</span>
+        <span class="text-neutral-500 uppercase tracking-wider">DIRECTIVE:</span>
+        <span class="px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-amber-300 font-bold">I.C.E. PERSONAL DIRECTIVE</span>
+        <span class="px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-neutral-300">NO EXTERNAL CONTACTS</span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-neutral-300 flex items-center gap-1 font-semibold" id="med-storage-badge">
-          <span class="w-1.5 h-1.5 bg-neutral-400 animate-pulse"></span>
+        <span class="text-emerald-400 flex items-center gap-1 font-semibold" id="med-storage-badge">
+          <span class="material-symbols-outlined text-[13px]">verified_user</span>
           LOCAL CACHE ENCRYPTED
         </span>
-        <span class="hidden text-[9px] text-white bg-neutral-800 px-2 py-0.5 border border-neutral-600 font-bold uppercase animate-pulse" id="med-save-feedback">
+        <span class="hidden text-[10px] text-emerald-300 bg-emerald-950/60 px-2 py-0.5 border border-emerald-700 font-bold uppercase" id="med-save-feedback">
           SAVED TO STORAGE
         </span>
       </div>
     </div>
 
     <!-- Form -->
-    <div class="p-4 sm:p-6 overflow-y-auto tactical-scroll space-y-4 text-xs flex-1 bg-black">
+    <div class="p-4 sm:p-5 overflow-y-auto tactical-scroll space-y-4 text-xs flex-1 bg-[#0a0a0a]">
 
       <!-- Name / DOB / Blood -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-          <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+          <label for="med-input-name" class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
             <span class="material-symbols-outlined text-[13px] text-neutral-300">badge</span>
             1. FULL NAME / IDENTIFIER
           </label>
-          <input class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-400 tracking-wider uppercase font-semibold" id="med-input-name" placeholder="OPERATOR FULL NAME" type="text" />
+          <input class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-white tracking-wider uppercase font-bold" id="med-input-name" placeholder="OPERATOR FULL NAME" type="text" />
         </div>
 
         <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-          <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+          <label for="med-input-dob" class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
             <span class="material-symbols-outlined text-[13px] text-neutral-300">calendar_today</span>
-            2. DATE OF BIRTH / DOB
+            2. DATE OF BIRTH
           </label>
-          <input class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-neutral-400 font-mono-numbers uppercase cursor-pointer" id="med-input-dob" type="date" />
+          <input class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-2 text-xs text-neutral-100 focus:outline-none focus:border-white font-mono-numbers uppercase cursor-pointer" id="med-input-dob" type="date" style="color-scheme: dark;" />
         </div>
 
         <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-          <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[13px] text-neutral-300">bloodtype</span>
-            3. BLOOD TYPE & Rh
+          <label for="med-input-blood" class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[13px] text-red-400">bloodtype</span>
+            3. BLOOD TYPE &amp; RH
           </label>
-          <select class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-neutral-400 tracking-wider uppercase font-bold cursor-pointer" id="med-input-blood">
-            <option value="O+">O POSITIVE (O+)</option>
-            <option value="O-">O NEGATIVE (O-)</option>
-            <option value="A+">A POSITIVE (A+)</option>
-            <option value="A-">A NEGATIVE (A-)</option>
-            <option value="B+">B POSITIVE (B+)</option>
-            <option value="B-">B NEGATIVE (B-)</option>
-            <option value="AB+">AB POSITIVE (AB+)</option>
-            <option value="AB-">AB NEGATIVE (AB-)</option>
-            <option value="UNKNOWN">UNKNOWN / PENDING</option>
+          <select class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-2 text-xs text-neutral-100 focus:outline-none focus:border-white tracking-wider uppercase font-bold cursor-pointer" id="med-input-blood">
+            <option class="bg-neutral-950" value="O+">O POSITIVE (O+)</option>
+            <option class="bg-neutral-950" value="O-">O NEGATIVE (O-)</option>
+            <option class="bg-neutral-950" value="A+">A POSITIVE (A+)</option>
+            <option class="bg-neutral-950" value="A-">A NEGATIVE (A-)</option>
+            <option class="bg-neutral-950" value="B+">B POSITIVE (B+)</option>
+            <option class="bg-neutral-950" value="B-">B NEGATIVE (B-)</option>
+            <option class="bg-neutral-950" value="AB+">AB POSITIVE (AB+)</option>
+            <option class="bg-neutral-950" value="AB-">AB NEGATIVE (AB-)</option>
+            <option class="bg-neutral-950" value="UNKNOWN">UNKNOWN / PENDING</option>
           </select>
         </div>
       </div>
 
       <!-- Chronic Conditions (Multi-select) -->
       <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-        <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+        <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-2 flex items-center gap-1">
           <span class="material-symbols-outlined text-[13px] text-neutral-300">clinical_notes</span>
-          4. CHRONIC CONDITIONS (multi-select)
+          4. CHRONIC CONDITIONS (MULTI-SELECT)
         </label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-[10px]" id="med-conditions-list">
-          <!-- Se rellena por JS -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-[10px] text-neutral-300" id="med-conditions-list">
+          <!-- Populated by JS -->
         </div>
-        <input 
-  type="text" 
-  id="med-conditions-other" 
-  class="mt-2 w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-400" 
-  placeholder="Other conditions (free text)" 
-/>
+        <input
+          type="text"
+          id="med-conditions-other"
+          class="mt-2.5 w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-white"
+          placeholder="Other conditions (free text)"
+        />
       </div>
 
       <!-- Allergies (Multi-select) -->
       <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-        <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-[13px] text-neutral-300">warning</span>
-          5. KNOWN ALLERGIES (multi-select)
+        <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+          <span class="material-symbols-outlined text-[13px] text-amber-400">warning</span>
+          5. KNOWN ALLERGIES (MULTI-SELECT)
         </label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-[10px]" id="med-allergies-list">
-          <!-- Se rellena por JS -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-[10px] text-neutral-300" id="med-allergies-list">
+          <!-- Populated by JS -->
         </div>
-        <input 
-  type="text" 
-  id="med-allergies-other" 
-  class="mt-2 w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-400" 
-  placeholder="Other allergies (free text)" 
-/>
+        <input
+          type="text"
+          id="med-allergies-other"
+          class="mt-2.5 w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-white"
+          placeholder="Other allergies (free text)"
+        />
       </div>
 
       <!-- Medications + Donor -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-          <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+          <label for="med-input-medications" class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
             <span class="material-symbols-outlined text-[13px] text-neutral-300">medication</span>
-            6. CURRENT MEDICATIONS & DOSAGES
+            6. CURRENT MEDICATIONS &amp; DOSAGES
           </label>
-          <textarea class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-400 tracking-wide resize-none" id="med-input-medications" placeholder="E.G. ALBUTEROL INHALER PRN, NONE" rows="3"></textarea>
+          <textarea class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-2 text-xs text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-white tracking-wide resize-none" id="med-input-medications" placeholder="E.g. Albuterol inhaler PRN, None" rows="3"></textarea>
         </div>
 
         <div class="p-3 bg-[#0e0e0e] border border-neutral-800">
-          <label class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+          <label for="med-input-donor" class="block text-[10px] text-neutral-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
             <span class="material-symbols-outlined text-[13px] text-neutral-300">volunteer_activism</span>
             7. ORGAN DONOR STATUS
           </label>
-          <select class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-neutral-400 tracking-wider uppercase font-semibold cursor-pointer" id="med-input-donor">
-            <option value="YES">ORGAN DONOR: YES (SÍ)</option>
-            <option value="NO">ORGAN DONOR: NO</option>
-            <option value="UNSPECIFIED" selected>UNSPECIFIED</option>
+          <select class="w-full bg-neutral-950 border border-neutral-700 px-2.5 py-2 text-xs text-neutral-100 focus:outline-none focus:border-white tracking-wider uppercase font-bold cursor-pointer" id="med-input-donor">
+            <option class="bg-neutral-950" value="YES">ORGAN DONOR: YES</option>
+            <option class="bg-neutral-950" value="NO">ORGAN DONOR: NO</option>
+            <option class="bg-neutral-950" value="UNSPECIFIED" selected>UNSPECIFIED</option>
           </select>
-          <div class="mt-2 text-[9px] text-neutral-500 leading-tight">
-            AUTORIZACIÓN MÉDICA EXPRESA PARA PROTOCOLOS DE RESCATE.
-          </div>
+          <p class="mt-2 text-[10px] text-neutral-500 leading-relaxed">
+            Express medical authorization directive for emergency rescue response.
+          </p>
         </div>
       </div>
     </div>
 
     <!-- Footer actions -->
-    <div class="px-3 sm:px-5 py-3 border-t border-neutral-800 bg-[#111111] flex flex-wrap items-center justify-between gap-3 text-[10px]">
-      <div class="flex items-center gap-2 text-neutral-500">
-        <span class="material-symbols-outlined text-[13px] text-neutral-400">lock</span>
+    <div class="px-4 py-3 border-t border-neutral-800 bg-[#111111] flex flex-wrap items-center justify-between gap-2 text-[11px]">
+      <div class="flex items-center gap-1.5 text-neutral-500">
+        <span class="material-symbols-outlined text-[13px]">lock</span>
         <span>PERSISTENT LOCAL STORAGE · NO REMOTE TRANSMISSION</span>
       </div>
       <div class="flex items-center gap-2 ml-auto">
-        <button class="px-3 py-1 uppercase transition-colors cursor-pointer" id="med-reset-defaults-btn">RESET</button>
-        <button class="px-4 py-1.5 font-bold uppercase transition-all flex items-center gap-1.5 cursor-pointer" id="med-save-data-btn">
-          <span class="material-symbols-outlined text-[13px]">save</span>
-          <span>SAVE MEDICAL DATA</span>
+        <button type="button" class="px-3 py-1.5 bg-neutral-900 border border-neutral-700 hover:border-white text-neutral-300 uppercase tracking-wider cursor-pointer transition-colors" id="med-reset-defaults-btn">RESET</button>
+        <button type="button" class="px-3.5 py-1.5 bg-emerald-950/70 border border-emerald-700 hover:border-emerald-400 text-emerald-200 font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors" id="med-save-data-btn">
+          <span class="material-symbols-outlined text-[14px]">save</span>
+          SAVE MEDICAL DATA
         </button>
       </div>
     </div>
