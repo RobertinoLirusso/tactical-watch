@@ -1,5 +1,5 @@
 // =====================================================
-//  TACTICAL EXPEDITION CHRONOMETER - Unified Script
+//  TACTICAL EXPEDITION CHRONOMETER - Unified Script Cities
 // =====================================================
 
 const CITY_DATA = [
