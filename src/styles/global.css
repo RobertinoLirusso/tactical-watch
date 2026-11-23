@@ -119,19 +119,19 @@
   --tac-pulse-c3: rgba(163, 112, 76, 0.8);
   --tac-scroll-thumb-hover: #8c6239;
 
-  --tac-camo-bg: #12100d;
-  --tac-camo-1: #2d241c;
-  --tac-camo-2: #3f3224;
-  --tac-camo-3: #181c16;
-  --tac-camo-4: #4a3b2c;
-  --tac-camo-5: #1a1612;
-  --tac-camo-grad: linear-gradient(90deg, #12100d 0%, #251e17 25%, #181c16 50%, #30261c 75%, #12100d 100%);
+  --tac-camo-bg: #15110c;
+  --tac-camo-1: #3a3d29;
+  --tac-camo-2: #63482d;
+  --tac-camo-3: #0b0a08;
+  --tac-camo-4: #9a744c;
+  --tac-camo-5: #452e1b;
+  --tac-camo-grad: linear-gradient(90deg, #120f0b 0%, #241d15 28%, #181c14 55%, #2d2318 80%, #120f0b 100%);
 
   --tac-bar-bg: #161310;
-  --tac-bar-1: #2f251c;
-  --tac-bar-2: #1e221b;
-  --tac-bar-3: #3d3123;
-  --tac-bar-4: #171512;
+  --tac-bar-1: #3b2d1f;
+  --tac-bar-2: #24291d;
+  --tac-bar-3: #705134;
+  --tac-bar-4: #0e0c09;
 
   --tac-atmo-filter: none;
 }
@@ -249,18 +249,18 @@
   --tac-scroll-thumb-hover: #ffffff;
 
   --tac-camo-bg: #0c0c0c;
-  --tac-camo-1: #262626;
-  --tac-camo-2: #404040;
-  --tac-camo-3: #171717;
-  --tac-camo-4: #595959;
-  --tac-camo-5: #121212;
-  --tac-camo-grad: linear-gradient(90deg, #0a0a0a 0%, #242424 25%, #141414 50%, #2e2e2e 75%, #0a0a0a 100%);
+  --tac-camo-1: #292929;
+  --tac-camo-2: #4a4a4a;
+  --tac-camo-3: #040404;
+  --tac-camo-4: #7a7a7a;
+  --tac-camo-5: #1c1c1c;
+  --tac-camo-grad: linear-gradient(90deg, #080808 0%, #1f1f1f 28%, #101010 55%, #292929 80%, #080808 100%);
 
-  --tac-bar-bg: #101010;
-  --tac-bar-1: #262626;
+  --tac-bar-bg: #0e0e0e;
+  --tac-bar-1: #2b2b2b;
   --tac-bar-2: #1c1c1c;
-  --tac-bar-3: #454545;
-  --tac-bar-4: #121212;
+  --tac-bar-3: #5c5c5c;
+  --tac-bar-4: #060606;
 
   --tac-atmo-filter: grayscale(1) contrast(1.08);
 }
@@ -377,19 +377,19 @@
   --tac-pulse-c3: rgba(101, 163, 13, 0.85);
   --tac-scroll-thumb-hover: #5c8743;
 
-  --tac-camo-bg: #0e160d;
-  --tac-camo-1: #1f321b;
-  --tac-camo-2: #314b28;
-  --tac-camo-3: #141e13;
-  --tac-camo-4: #415c31;
-  --tac-camo-5: #172215;
-  --tac-camo-grad: linear-gradient(90deg, #0e160d 0%, #1d2e19 25%, #132013 50%, #2a4021 75%, #0e160d 100%);
+  --tac-camo-bg: #0c160b;
+  --tac-camo-1: #223d1e;
+  --tac-camo-2: #3d632c;
+  --tac-camo-3: #060d06;
+  --tac-camo-4: #6c994b;
+  --tac-camo-5: #2c4221;
+  --tac-camo-grad: linear-gradient(90deg, #0a1209 0%, #192b15 28%, #0f1c0e 55%, #23381b 80%, #0a1209 100%);
 
-  --tac-bar-bg: #101a0f;
-  --tac-bar-1: #21361c;
-  --tac-bar-2: #172415;
-  --tac-bar-3: #36502b;
-  --tac-bar-4: #121c11;
+  --tac-bar-bg: #0f1a0e;
+  --tac-bar-1: #24401f;
+  --tac-bar-2: #182915;
+  --tac-bar-3: #4e7837;
+  --tac-bar-4: #080f07;
 
   --tac-atmo-filter: sepia(0.32) hue-rotate(68deg) saturate(1.18);
 }
@@ -506,19 +506,19 @@
   --tac-pulse-c3: rgba(14, 165, 233, 0.85);
   --tac-scroll-thumb-hover: #38bdf8;
 
-  --tac-camo-bg: #08121d;
-  --tac-camo-1: #13273d;
-  --tac-camo-2: #1d3c5c;
-  --tac-camo-3: #0d1b2b;
-  --tac-camo-4: #2a537a;
-  --tac-camo-5: #0b1624;
-  --tac-camo-grad: linear-gradient(90deg, #08121d 0%, #112438 25%, #0c1a29 50%, #193552 75%, #08121d 100%);
+  --tac-camo-bg: #06101c;
+  --tac-camo-1: #112a44;
+  --tac-camo-2: #1f486e;
+  --tac-camo-3: #03080f;
+  --tac-camo-4: #3e87b8;
+  --tac-camo-5: #163450;
+  --tac-camo-grad: linear-gradient(90deg, #050d17 0%, #0e2033 28%, #081523 55%, #142b42 80%, #050d17 100%);
 
-  --tac-bar-bg: #091522;
-  --tac-bar-1: #152b42;
-  --tac-bar-2: #0f2033;
-  --tac-bar-3: #224669;
-  --tac-bar-4: #0b1826;
+  --tac-bar-bg: #081421;
+  --tac-bar-1: #15314d;
+  --tac-bar-2: #0d2033;
+  --tac-bar-3: #2a638f;
+  --tac-bar-4: #040b12;
 
   --tac-atmo-filter: hue-rotate(175deg) saturate(1.1);
 }
@@ -554,25 +554,27 @@ html, body {
    ============================================================ */
 .camo-strip-pattern {
   background-color: var(--tac-camo-bg);
-  background-image: 
-    radial-gradient(var(--tac-camo-1) 32%, transparent 34%),
-    radial-gradient(var(--tac-camo-2) 36%, transparent 38%),
-    radial-gradient(var(--tac-camo-3) 28%, transparent 30%),
-    radial-gradient(var(--tac-camo-4) 24%, transparent 26%),
-    radial-gradient(var(--tac-camo-5) 40%, transparent 42%),
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 4px),
+    conic-gradient(from 90deg at 28% 36%, var(--tac-camo-4) 0 90deg, transparent 0),
+    conic-gradient(from 180deg at 64% 58%, var(--tac-camo-2) 0 90deg, transparent 0),
+    linear-gradient(122deg, var(--tac-camo-1) 24%, transparent 24.5%, transparent 66%, var(--tac-camo-1) 66.5%),
+    linear-gradient(-38deg, transparent 34%, var(--tac-camo-3) 34.5%, var(--tac-camo-3) 62%, transparent 62.5%),
+    conic-gradient(from 270deg at 45% 42%, var(--tac-camo-5) 0 90deg, transparent 0),
     var(--tac-camo-grad);
-  background-size: 42px 28px, 54px 34px, 60px 32px, 36px 26px, 28px 22px, 100% 100%;
-  background-position: 0px 0px, 18px 14px, 36px 8px, 12px 16px, 6px 4px, 0px 0px;
+  background-size: 100% 6px, 8px 100%, 38px 14px, 54px 18px, 76px 24px, 92px 22px, 66px 16px, 100% 100%;
+  background-position: 0 0, 0 0, 7px 3px, 19px 6px, 11px 0, 29px 5px, 41px 2px, 0 0;
 }
 
 .camo-accent-bar {
   background-color: var(--tac-bar-bg);
-  background-image: 
-    radial-gradient(circle at 15% 50%, var(--tac-bar-1) 0%, var(--tac-bar-1) 30%, transparent 32%),
-    radial-gradient(circle at 45% 40%, var(--tac-bar-2) 0%, var(--tac-bar-2) 36%, transparent 38%),
-    radial-gradient(circle at 75% 60%, var(--tac-bar-3) 0%, var(--tac-bar-3) 28%, transparent 30%),
-    radial-gradient(circle at 92% 30%, var(--tac-bar-4) 0%, var(--tac-bar-4) 34%, transparent 36%);
-  background-size: 60px 18px;
+  background-image:
+    conic-gradient(from 90deg at 32% 50%, var(--tac-bar-3) 0 90deg, transparent 0),
+    linear-gradient(115deg, var(--tac-bar-1) 28%, transparent 28.5%, transparent 68%, var(--tac-bar-2) 68.5%),
+    linear-gradient(-40deg, transparent 36%, var(--tac-bar-4) 36.5%, var(--tac-bar-4) 64%, transparent 64.5%);
+  background-size: 32px 10px, 56px 12px, 74px 12px;
+  background-position: 5px 1px, 13px 0, 27px 2px;
 }
 
 /* ============================================================

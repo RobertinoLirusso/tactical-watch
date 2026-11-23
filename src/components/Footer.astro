@@ -33,11 +33,16 @@
     </button>
   </nav>
 
-  <div class="w-full max-w-6xl flex items-center gap-3 pt-0.5">
+  <!-- Bottom Camo Strip -->
+  <div class="w-full max-w-7xl flex items-center gap-3 pt-0.5">
     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-neutral-800 to-neutral-700"></div>
-    <span class="text-[9px] font-mono-numbers tracking-[0.3em] text-neutral-600 uppercase whitespace-nowrap">
-      TACTICAL WATCH
-    </span>
+
+    <div class="h-4 w-full max-w-2xl relative overflow-hidden border border-neutral-800 shadow-lg camo-strip-pattern">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
+      <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
+      <div class="absolute inset-x-0 bottom-0 h-px bg-black"></div>
+    </div>
+
     <div class="h-px flex-1 bg-gradient-to-l from-transparent via-neutral-800 to-neutral-700"></div>
   </div>
 </footer>
