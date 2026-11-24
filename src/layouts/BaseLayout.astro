@@ -66,13 +66,15 @@ const structuredData = {
     <link rel="sitemap" href="/sitemap.xml" />
     <script is:inline>
       try {
-        var t = localStorage.getItem("tactical-watch-theme");
-        var valid = t === "default" || t === "bw" || t === "military" || t === "arctic" ? t : "default";
-        document.documentElement.setAttribute("data-theme", valid);
+        document.documentElement.setAttribute("data-theme", "default");
+        var nv = localStorage.getItem("tactical-watch-night-vision");
+        var nvActive = nv === "true";
+        document.documentElement.setAttribute("data-night-vision", nvActive ? "true" : "false");
         var av = localStorage.getItem("tactical-watch-alarm-visible");
         document.documentElement.setAttribute("data-alarm-hidden", av === "false" ? "true" : "false");
       } catch (e) {
         document.documentElement.setAttribute("data-theme", "default");
+        document.documentElement.setAttribute("data-night-vision", "false");
         document.documentElement.setAttribute("data-alarm-hidden", "false");
       }
     </script>

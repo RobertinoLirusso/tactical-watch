@@ -2200,49 +2200,53 @@ initUserPositionOnLoad();
   calc();
 })();
 
-// ===================== THEME SELECTOR =====================
-(function initThemeSelector() {
-  const THEME_KEY = "tactical-watch-theme";
-  const THEMES = {
-    default: { swatch: "#d4a373", metaColor: "#000000" },
-    bw: { swatch: "#ffffff", metaColor: "#000000" },
-    military: { swatch: "#84cc16", metaColor: "#030704" },
-    arctic: { swatch: "#38bdf8", metaColor: "#02060b" }
-  };
-
-  const selectEl = document.getElementById("theme-select");
-  const swatchEl = document.getElementById("theme-swatch");
+// ===================== NIGHT VISION MODE =====================
+(function initNightVisionMode() {
+  const NV_KEY = "tactical-watch-night-vision";
+  const toggleBtn = document.getElementById("night-vision-toggle-btn");
+  const labelEl = document.getElementById("night-vision-label");
+  const iconEl = document.getElementById("night-vision-icon");
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
-  function applyTheme(themeKey, persist = true) {
-    const validKey = Object.prototype.hasOwnProperty.call(THEMES, themeKey) ? themeKey : "default";
-    document.documentElement.setAttribute("data-theme", validKey);
+  document.documentElement.setAttribute("data-theme", "default");
 
-    const cfg = THEMES[validKey];
-    if (swatchEl) swatchEl.style.backgroundColor = cfg.swatch;
-    if (metaThemeColor) metaThemeColor.setAttribute("content", cfg.metaColor);
-    if (selectEl && selectEl.value !== validKey) selectEl.value = validKey;
+  let isNightVision = false;
+
+  function applyNightVision(enabled, persist = true) {
+    isNightVision = Boolean(enabled);
+    document.documentElement.setAttribute("data-night-vision", isNightVision ? "true" : "false");
+
+    if (toggleBtn) {
+      toggleBtn.setAttribute("aria-pressed", isNightVision ? "true" : "false");
+    }
+    if (labelEl) {
+      labelEl.textContent = isNightVision ? "NIGHT VISION: ON" : "NIGHT VISION: OFF";
+    }
+    if (iconEl) {
+      iconEl.textContent = isNightVision ? "visibility" : "dark_mode";
+    }
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", isNightVision ? "#010502" : "#000000");
+    }
 
     if (persist) {
       try {
-        localStorage.setItem(THEME_KEY, validKey);
+        localStorage.setItem(NV_KEY, isNightVision ? "true" : "false");
       } catch (e) {}
     }
   }
 
-  let initialTheme = "default";
   try {
-    const saved = localStorage.getItem(THEME_KEY);
-    if (saved && Object.prototype.hasOwnProperty.call(THEMES, saved)) {
-      initialTheme = saved;
-    }
-  } catch (e) {}
+    isNightVision = localStorage.getItem(NV_KEY) === "true";
+  } catch (e) {
+    isNightVision = false;
+  }
 
-  applyTheme(initialTheme, false);
+  applyNightVision(isNightVision, false);
 
-  selectEl?.addEventListener("change", (e) => {
+  toggleBtn?.addEventListener("click", () => {
     initAudioContext();
-    applyTheme(e.target.value, true);
+    applyNightVision(!isNightVision, true);
   });
 })();
 
